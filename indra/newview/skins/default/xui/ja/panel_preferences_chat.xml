@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<panel label="チャット" name="chat">
+	<text name="font_size">
+		文字の大きさ：
+	</text>
+	<radio_group name="chat_font_size">
+		<radio_item label="小" name="radio" value="0"/>
+		<radio_item label="中" name="radio2" value="1"/>
+		<radio_item label="大" name="radio3" value="2"/>
+	</radio_group>
+	<check_box initial_value="true" label="チャット中にタイピング動作のアニメーションを再生" name="play_typing_animation"/>
+	<check_box label="オフライン時に受け取った IM をメールで受信" name="send_im_to_email"/>
+	<check_box label="IM とチャット履歴に文字だけ表示する" name="plain_text_chat_history"/>
+	<check_box label="吹き出しチャット" name="bubble_text_chat"/>
+	<text name="show_ims_in_label">
+		IM の表示方法：
+	</text>
+	<text name="requires_restart_label">
+		（再起動後に反映）
+	</text>
+	<radio_group name="chat_window" tool_tip="インスタントメッセージを別フローター、または1つのフローターに複数タブで表示します（要再起動）">
+		<radio_item label="別々のウィンドウ" name="radio" value="0"/>
+		<radio_item label="タブ" name="radio2" value="1"/>
+	</radio_group>
+	<text name="disable_toast_label">
+		受信チャットのポップアップを有効にする
+	</text>
+	<check_box label="グループチャット" name="EnableGroupChatPopups" tool_tip="これを選択すると、グループチャットメッセージを受信した際にポップアップが表示されます"/>
+	<check_box label="IM チャット" name="EnableIMChatPopups" tool_tip="これを選択すると、インスタントメッセージを受信した際にポップアップが表示されます"/>
+	<spinner label="近くのチャットメッセージが表示される長さ：" name="nearby_toasts_lifetime"/>
+	<spinner label="近くのチャットメッセージが消えるまでの長さ：" name="nearby_toasts_fadingtime"/>
+	<button label="チャットの翻訳設定" name="ok_btn"/>
+</panel>
