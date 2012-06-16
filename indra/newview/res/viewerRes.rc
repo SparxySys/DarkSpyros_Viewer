@@ -67,7 +67,7 @@ STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_VISIBLE
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDI_LL_ICON,IDC_STATIC,7,7,20,20
-    LTEXT           "Loading Second Life...",666,36,13,211,8
+    LTEXT           "Loading DarkSpyro\'s Viewer...",666,36,13,211,8
 END
 
 
@@ -129,8 +129,8 @@ TOOLSIT                 CURSOR                  "toolsit.cur"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,1,1,0
- PRODUCTVERSION 2,1,1,0
+ FILEVERSION 3,3,01,00
+ PRODUCTVERSION 3,3,01,00
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -146,13 +146,13 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "CompanyName", "Linden Lab"
-            VALUE "FileDescription", "Second Life"
+            VALUE "FileDescription", "DarkSpyro\'s Viewer"
             VALUE "FileVersion", "2.1.1.0"
-            VALUE "InternalName", "Second Life"
-            VALUE "LegalCopyright", "Copyright � 2001-2010, Linden Research, Inc."
+            VALUE "InternalName", "DarkSpyro\'s Viewer"
+            VALUE "LegalCopyright", "Copyright � 2001-2010, Linden Research, Inc., Copyright 2012 Christophe Korosec"
             VALUE "OriginalFilename", "SecondLife.exe"
-            VALUE "ProductName", "Second Life"
-            VALUE "ProductVersion", "2.1.1.0"
+            VALUE "ProductName", "DarkSpyro\'s Viewer"
+            VALUE "ProductVersion", "3.3.01.00"
         END
     END
     BLOCK "VarFileInfo"
