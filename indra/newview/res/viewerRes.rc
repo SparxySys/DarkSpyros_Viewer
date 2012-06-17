@@ -129,8 +129,8 @@ TOOLSIT                 CURSOR                  "toolsit.cur"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,3,01,00
- PRODUCTVERSION 3,3,01,00
+ FILEVERSION 3320,12,06,17
+ PRODUCTVERSION 3320,12,06,17
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -152,7 +152,7 @@ BEGIN
             VALUE "LegalCopyright", "Copyright � 2001-2010, Linden Research, Inc., Copyright 2012 Christophe Korosec"
             VALUE "OriginalFilename", "SecondLife.exe"
             VALUE "ProductName", "DarkSpyro\'s Viewer"
-            VALUE "ProductVersion", "3.3.01.00"
+            VALUE "ProductVersion", "3320.12.06.17"
         END
     END
     BLOCK "VarFileInfo"
