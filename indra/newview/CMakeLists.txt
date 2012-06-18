@@ -632,6 +632,7 @@ set(viewer_SOURCE_FILES
     llworldmapview.cpp
     llxmlrpclistener.cpp
     llxmlrpctransaction.cpp
+	lslpreproc.cpp
     noise.cpp
     pipeline.cpp
 	qtoolalign.cpp
@@ -1199,6 +1200,7 @@ set(viewer_HEADER_FILES
     llworldmapview.h
     llxmlrpclistener.h
     llxmlrpctransaction.h
+	lslpreproc.h
     macmain.h
     noise.h
     pipeline.h

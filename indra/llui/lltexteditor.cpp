@@ -2403,6 +2403,14 @@ void LLTextEditor::loadKeywords(const std::string& filename,
 	}
 }
 
+void LLTextEditor::addToken(LLKeywordToken::TOKEN_TYPE type,
+          const std::string& key,
+          const LLColor3& color,
+          const std::string& tool_tip)
+{
+  mKeywords.addToken(type,key,color,tool_tip);
+}
+
 void LLTextEditor::updateSegments()
 {
 	if (mReflowIndex < S32_MAX && mKeywords.isLoaded() && mParseOnTheFly)

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<panel
+ border="true"
+ follows="left|top|right|bottom"
+ height="408"
+ label="General"
+ layout="topleft"
+ left="102"
+ name="lslpreproc"
+ top="1"
+ width="517">
+    <check_box
+     control_name="LSLPreprocessor"
+     height="15"
+     initial_value="false"
+     label="Enable Preprocessor"
+     layout="topleft"
+     name="preproc_checkbox"
+     top="30"
+	 left="30"
+     width="200" />
+    <check_box
+     control_name="PreProcLSLOptimizer"
+	 enabled_control="LSLPreprocessor"
+     height="15"
+     initial_value="false"
+     label="Optimizer"
+     layout="topleft"
+     name="preprocoptimizer_checkbox"
+     top_pad="15"
+	 left="45"
+     width="200" />
+    <check_box
+     control_name="PreProcLSLSwitch"
+	 enabled_control="LSLPreprocessor"
+     height="15"
+     initial_value="false"
+     label="Switches"
+     layout="topleft"
+     name="preprocswitch_checkbox"
+     top_pad="5"
+	 left="45"
+     width="200" />
+    <check_box
+     control_name="PreProcLSLLazyLists"
+	 enabled_control="LSLPreprocessor"
+     height="15"
+     initial_value="false"
+     label="Lazy Lists"
+     layout="topleft"
+     name="preproclazy_checkbox"
+     top_pad="5"
+	 left="45"
+     width="200" />
+    <check_box
+     control_name="PreProcEnableHDDInclude"
+	 enabled_control="LSLPreprocessor"
+     height="15"
+     initial_value="false"
+     label="Local Drive #Includes"
+     layout="topleft"
+     name="preprocinclude_checkbox"
+     top_pad="5"
+	 left="45"
+     width="200" />
+   <text
+	 height="15"
+     type="string"
+     length="1"
+	 layout="topleft"
+     name="lslpreprocinclude_textbox"
+     top_delta="35"
+     left="45"
+     width="256">
+        Preprocessor include path:
+    </text>
+  <line_editor
+   control_name="PreProcHDDIncludeLocation"
+   enabled_control="PreProcEnableHDDInclude"
+   border_style="line"
+   border_thickness="1"
+   follows="left|top"
+   font="SansSerif"
+   height="23"
+   layout="topleft"
+   left="45"
+   max_length="4096"
+   name="preprocinclude_location"
+   top_delta="15"
+   width="310" />
+  <button
+   follows="left|top"
+   height="23"
+   label="Browse"
+   label_selected="Browse"
+   layout="topleft"
+   left_pad="5"
+   name="set_cache"
+   top_delta="0"
+   width="100">
+  <button.commit_callback
+   function="Pref.SetPreprocInclude" />
+  </button>
+</panel>

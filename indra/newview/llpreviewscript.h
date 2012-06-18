@@ -49,6 +49,7 @@ class LLKeywordToken;
 class LLVFS;
 class LLViewerInventoryItem;
 class LLScriptEdContainer;
+class LSLPreprocessor;
 
 // Inner, implementation class.  LLPreviewScript and LLLiveLSLEditor each own one of these.
 class LLScriptEdCore : public LLPanel
@@ -58,6 +59,7 @@ class LLScriptEdCore : public LLPanel
 	friend class LLLiveLSLEditor;
 	friend class LLFloaterScriptSearch;
 	friend class LLScriptEdContainer;
+	friend class LSLPreprocessor;
 
 protected:
 	// Supposed to be invoked only by the container.
@@ -82,6 +84,8 @@ public:
 	bool			canLoadOrSaveToFile( void* userdata );
 
 	void            setScriptText(const std::string& text, BOOL is_valid);
+	std::string		getScriptText();
+	void			doSaveComplete(void* userdata, BOOL close_after_save );
 	bool			loadScriptText(const std::string& filename);
 	bool			writeToFile(const std::string& filename);
 	void			sync();
@@ -108,6 +112,7 @@ public:
 	virtual bool	hasAccelerators() const { return true; }
 
 private:
+	static void		onToggleProc(void* userdata);	
 	void		onBtnHelp();
 	void		onBtnDynamicHelp();
 	void		onBtnUndoChanges();
@@ -146,6 +151,10 @@ private:
 	BOOL			mEnableSave;
 	BOOL			mHasScriptData;
 	LLLiveLSLFile*	mLiveFile;
+	
+	LSLPreprocessor* mLSLProc;
+	LLTextEditor*	mPostEditor;
+	std::string		mPostScript;
 
 	LLScriptEdContainer* mContainer; // parent view
 };
@@ -161,6 +170,11 @@ protected:
 	std::string		getTmpFileName();
 	bool			onExternalChange(const std::string& filename);
 	virtual void	saveIfNeeded(bool sync = true) = 0;
+	
+	void uploadAssetViaCaps(const std::string& url,
+							const std::string& filename, 
+							const LLUUID& item_id,
+							bool mono);
 
 	LLScriptEdCore*		mScriptEd;
 };
@@ -183,7 +197,8 @@ protected:
 	/*virtual*/ void saveIfNeeded(bool sync = true);
 	void uploadAssetViaCaps(const std::string& url,
 							const std::string& filename, 
-							const LLUUID& item_id);
+							const LLUUID& item_id,
+							bool mono);
 	void uploadAssetLegacy(const std::string& filename,
 							const LLUUID& item_id,
 							const LLTransactionID& tid);

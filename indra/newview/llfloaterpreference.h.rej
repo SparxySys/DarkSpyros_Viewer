@@ -1,0 +1,10 @@
+--- llfloaterpreference.h
++++ llfloaterpreference.h
+@@ -132,6 +132,7 @@
+ 	void setKey(KEY key);
+ 	void onClickSetMiddleMouse();
+ 	void onClickSetSounds();
++	void setPreprocInclude();
+ //	void onClickSkipDialogs();
+ //	void onClickResetDialogs();
+ 	void onClickEnablePopup();

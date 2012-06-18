@@ -50,6 +50,13 @@
      tab_padding_right="0"
      top="21"
      width="658">
+ 		 <panel
+		 class="panel_preference"
+         filename="panel_preferences_lslpreproc.xml"
+         label="LSL Pre-Processor"
+         layout="topleft"
+         help_topic="preferences_lslpreproc_tab"
+         name="lslpreproc" />
         <panel
 	 class="panel_preference"
          filename="panel_preferences_general.xml"

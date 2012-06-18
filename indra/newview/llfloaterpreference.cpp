@@ -349,6 +349,7 @@ LLFloaterPreference::LLFloaterPreference(const LLSD& key)
 	mCommitCallbackRegistrar.add("Pref.BlockList",				boost::bind(&LLFloaterPreference::onClickBlockList, this));
 	mCommitCallbackRegistrar.add("Pref.Proxy",					boost::bind(&LLFloaterPreference::onClickProxySettings, this));
 	mCommitCallbackRegistrar.add("Pref.TranslationSettings",	boost::bind(&LLFloaterPreference::onClickTranslationSettings, this));
+	mCommitCallbackRegistrar.add("Pref.SetPreprocInclude",		boost::bind(&LLFloaterPreference::setPreprocInclude, this));
 	
 	sSkin = gSavedSettings.getString("SkinCurrent");
 
@@ -1533,6 +1534,26 @@ void LLFloaterPreference::onClickProxySettings()
 void LLFloaterPreference::onClickTranslationSettings()
 {
 	LLFloaterReg::showInstance("prefs_translation");
+}
+
+void LLFloaterPreference::setPreprocInclude()
+{
+	static LLCachedControl<std::string> preProcHDDIncludeLocation(gSavedSettings, "PreProcHDDIncludeLocation");
+	std::string cur_name(preProcHDDIncludeLocation);
+	std::string proposed_name(cur_name);
+
+	LLDirPicker& picker = LLDirPicker::instance();
+	if (! picker.getDir(&proposed_name ) )
+	{
+		return; //Canceled!
+	}
+
+	std::string dir_name = picker.getDirName();
+	if (!dir_name.empty() && dir_name != cur_name)
+	{
+		std::string new_top_folder(gDirUtilp->getBaseFileName(dir_name));	
+		gSavedSettings.setString("PreProcHDDIncludeLocation", dir_name);
+	}
 }
 
 void LLFloaterPreference::onClickActionChange()
