@@ -71,6 +71,7 @@
 #include "llcallingcard.h"
 #include "llslurl.h"			// IDEVO
 #include "llsidepanelinventory.h"
+#include "fsfloaterprofile.h"
 // [RLVa:KB] - Checked: 2011-04-11 (RLVa-1.3.0h) | Added: RLVa-1.3.0h
 #include "rlvhandler.h"
 // [/RLVa:KB]
@@ -381,7 +382,17 @@ void LLAvatarActions::showProfile(const LLUUID& id)
 {
 	if (id.notNull())
 	{
-		LLAvatarNameCache::get(id, boost::bind(&on_avatar_name_show_profile, _1, _2));
+//<FS:KC legacy profiles>
+        if (gSavedSettings.getBOOL("FSUseWebProfiles"))
+		{
+            showProfileWeb(id);
+        }
+        else
+        {
+			showProfileLegacy(id);
+		}
+//		LLAvatarNameCache::get(id, boost::bind(&on_avatar_name_show_profile, _1, _2));
+//</FS:KC legacy profiles>
 	}
 }
 
@@ -397,10 +408,39 @@ bool LLAvatarActions::profileVisible(const LLUUID& id)
 //static
 LLFloater* LLAvatarActions::getProfileFloater(const LLUUID& id)
 {
+//<FS:KC legacy profiles>
+    if (!gSavedSettings.getBOOL("FSUseWebProfiles"))
+    {
+        FSFloaterProfile *browser = dynamic_cast<FSFloaterProfile*>
+            (LLFloaterReg::findInstance("floater_profile", LLSD().with("id", id)));
+        return browser;
+    }
+//</FS:KC legacy profiles>
 	LLFloaterWebContent *browser = dynamic_cast<LLFloaterWebContent*>
 		(LLFloaterReg::findInstance(get_profile_floater_name(id), LLSD().with("id", id)));
 	return browser;
 }
+
+//<FS:KC legacy profiles>
+// static
+void LLAvatarActions::showProfileWeb(const LLUUID& id)
+{
+	if (id.notNull())
+	{
+		LLAvatarNameCache::get(id, boost::bind(&on_avatar_name_show_profile, _1, _2));
+	}
+}
+
+// static
+void LLAvatarActions::showProfileLegacy(const LLUUID& id)
+{
+	if (id.notNull())
+	{
+        LLFloaterReg::showInstance("floater_profile", LLSD().with("id", id));
+	}
+}
+//</FS:KC legacy profiles>
+
 
 //static 
 void LLAvatarActions::hideProfile(const LLUUID& id)

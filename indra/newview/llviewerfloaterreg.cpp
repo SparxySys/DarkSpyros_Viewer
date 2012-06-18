@@ -136,6 +136,7 @@
 #include "llcommandhandler.h"
 #include "llnearbychatbar.h"
 #include "ao.h"
+#include "fsfloaterprofile.h" // <FS:KC legacy profiles>
 
 #include "exporttracker.h"
 #include "importtracker.h"
@@ -208,6 +209,11 @@ void LLViewerFloaterReg::registerFloaters()
 	LLFloaterReg::add("env_edit_day_cycle", "floater_edit_day_cycle.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterEditDayCycle>);
 
 	LLFloaterReg::add("event", "floater_event.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterEvent>);
+
+//<FS:KC legacy profiles>
+	LLFloaterReg::add("floater_profile", "floater_profile_view.xml",&LLFloaterReg::build<FSFloaterProfile>);
+//</FS:KC legacy profiles>
+
 	
 	LLFloaterReg::add("font_test", "floater_font_test.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterFontTest>);
 

@@ -44,6 +44,7 @@
 #include "llviewergenericmessage.h"	// send_generic_message
 #include "llmenugl.h"
 #include "llviewermenu.h"
+#include "llviewernetwork.h"
 #include "llregistry.h"
 
 #include "llaccordionctrl.h"

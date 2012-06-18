@@ -82,6 +82,10 @@ set(viewer_SOURCE_FILES
     ao.cpp
 	aoengine.cpp
 	aoset.cpp
+	fsfloaterprofile.cpp
+    fspanelclassified.cpp
+    fspanelprofile.cpp
+    fspanelprofileclassifieds.cpp
 	fsareasearch.cpp
 	groupchatlistener.cpp
     llaccountingcostmanager.cpp
@@ -652,6 +656,10 @@ set(viewer_HEADER_FILES
     ao.h
 	aoengine.h
 	aoset.h
+	fsfloaterprofile.h
+    fspanelclassified.h
+    fspanelprofile.h
+    fspanelprofileclassifieds.h
 	fsareasearch.h
 	groupchatlistener.h
     llaccountingcostmanager.h
