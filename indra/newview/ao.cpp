@@ -96,7 +96,7 @@ void FloaterAO::updateAnimationList()
 	if(!mSelectedSet)
 	{
 		mStateSelector->setEnabled(FALSE);
-		mStateSelector->add("no_animations_loaded"); //              getString("no_animations_loaded"));
+		mStateSelector->add(getString("ao_no_animations_loaded"));
 		return;
 	}
 
@@ -138,7 +138,12 @@ void FloaterAO::updateList()
 	if(mSetList.empty())
 	{
 		lldebugs << "empty set list" << llendl;
+		mSetSelector->add(getString("ao_no_sets_loaded"));
+		mSetSelectorSmall->add(getString("ao_no_sets_loaded"));
+		mSetSelector->selectNthItem(0);
+		mSetSelectorSmall->selectNthItem(0);
 		enableSetControls(FALSE);
+		
 		return;
 	}
 
@@ -362,16 +367,15 @@ void FloaterAO::onClickActivate()
 	AOEngine::instance().selectSet(mSelectedSet);
 }
 
-LLScrollListItem* FloaterAO::addAnimation(const std::string name)
+LLScrollListItem* FloaterAO::addAnimation(const std::string& name)
 {
 	LLSD row;
+	row["columns"][0]["column"]="icon";
 	row["columns"][0]["type"]="icon";
 	row["columns"][0]["value"]="Inv_Animation";
-	row["columns"][0]["width"]=20;
-
+	row["columns"][1]["column"]="animation_name";
 	row["columns"][1]["type"]="text";
 	row["columns"][1]["value"]=name;
-	row["columns"][1]["width"]=200;			// 170 later
 
 	return mAnimationList->addElement(row);
 }
@@ -379,6 +383,8 @@ LLScrollListItem* FloaterAO::addAnimation(const std::string name)
 void FloaterAO::onSelectState()
 {
 	mAnimationList->deleteAllItems();
+	mAnimationList->setCommentText(getString("ao_no_animations_loaded"));
+	mAnimationList->setEnabled(FALSE);
 	onChangeAnimationSelection();
 
 	if(!mSelectedSet)
@@ -386,29 +392,20 @@ void FloaterAO::onSelectState()
 
 	mSelectedState=mSelectedSet->getStateByName(mStateSelector->getSelectedItemLabel());
 	if(!mSelectedState)
-	{
-//		mAnimationList->addSimpleElement("no_animations_loaded");   // 		getString("no_animations_loaded"));
+			return;
 
-		mAnimationList->setEnabled(FALSE);
-		LLSD row;
-/*		row["columns"][0]["type"]="icon";
-		row["columns"][0]["value"]="";
-		row["columns"][0]["width"]=20;
-*/
-		row["columns"][0]["type"]="text";
-		row["columns"][0]["value"]="no_animations_loaded";  // 		getString("no_animations_loaded"));
-		row["columns"][0]["width"]=200;
-		mAnimationList->addElement(row);
-		return;
-	}
-
-	mAnimationList->setEnabled(TRUE);
 	mSelectedState=(AOSet::AOState*) mStateSelector->getCurrentUserdata();
-	for(U32 index=0;index<mSelectedState->mAnimations.size();index++)
+	if(mSelectedState->mAnimations.size())
 	{
-		LLScrollListItem* item=addAnimation(mSelectedState->mAnimations[index].mName);
-		if(item)
-			item->setUserdata(&mSelectedState->mAnimations[index].mInventoryUUID);
+		for(U32 index=0;index<mSelectedState->mAnimations.size();index++)
+		{
+			LLScrollListItem* item=addAnimation(mSelectedState->mAnimations[index].mName);
+			if(item)
+				item->setUserdata(&mSelectedState->mAnimations[index].mInventoryUUID);
+		}
+
+		mAnimationList->setCommentText("");
+		mAnimationList->setEnabled(TRUE);
 	}
 
 	mCycleCheckBox->setValue(mSelectedState->mCycle);
