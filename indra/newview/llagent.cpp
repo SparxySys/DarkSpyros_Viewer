@@ -88,6 +88,8 @@
 #include "llworld.h"
 #include "llworldmap.h"
 #include "stringize.h"
+#include "aoengine.h"
+#include "llstartup.h"
 // [RLVa:KB] - Checked: 2011-11-04 (RLVa-1.4.4a)
 #include "rlvhandler.h"
 #include "rlvhelper.h"
@@ -189,6 +191,19 @@ bool LLAgent::isActionAllowed(const LLSD& sdname)
 	}
 
 	return retval;
+}
+
+// static
+bool LLAgent::ToggleAO(const LLSD& dummy)
+{
+    AOEngine::getInstance()->Toggle();
+    return TRUE;
+}
+
+// static
+bool LLAgent::CheckAO(const LLSD& dummy)
+{
+    return AOEngine::getInstance()->isRunning();
 }
 
 // static 
@@ -340,6 +355,11 @@ void LLAgent::init()
 	gSavedSettings.getControl("PreferredMaturity")->getSignal()->connect(boost::bind(&LLAgent::handleMaturity, this, _2));
 
 	LLViewerParcelMgr::getInstance()->addAgentParcelChangedCallback(boost::bind(&LLAgent::parcelChangedCallback));
+	
+	LLUICtrl::EnableCallbackRegistry::currentRegistrar().add("Agent.CheckAO", boost::bind(&LLAgent::CheckAO, _2));
+    LLUICtrl::CommitCallbackRegistry::currentRegistrar().add("Agent.ToggleAO", boost::bind(&LLAgent::ToggleAO, _2));
+
+	
 
 	mInitialized = TRUE;
 }

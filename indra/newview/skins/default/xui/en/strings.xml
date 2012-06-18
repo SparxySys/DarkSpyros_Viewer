@@ -3686,7 +3686,9 @@ Try enclosing path to the editor with double quotes.
   <string name="ParticleHiding">Hiding Particles</string>
 
   <!-- commands -->
-
+  
+  <string name="Command_AOMenu_Label">AO Setup</string>
+  <string name="Command_AOSwitch_Label">AO On/Off</string>
   <string name="Command_AboutLand_Label">About land</string>
   <string name="Command_Appearance_Label">Appearance</string>
   <string name="Command_Avatar_Label">Avatar</string>
@@ -3713,6 +3715,9 @@ Try enclosing path to the editor with double quotes.
   <string name="Command_View_Label">Camera controls</string>
   <string name="Command_Voice_Label">Voice settings</string>
 
+  <string name="Command_AOMenu_Tooltip">Configure the Animation Overrider</string>
+  <string name="Command_AOSwitch_Tooltip">On/Off Switch for Animation Overrider</string>
+  <string name="Command_AO_Tooltip">Clientside Animation Overider</string>
   <string name="Command_AboutLand_Tooltip">Information about the land you're visiting</string>
   <string name="Command_Appearance_Tooltip">Change your avatar</string>
   <string name="Command_Avatar_Tooltip">Choose a complete avatar</string>

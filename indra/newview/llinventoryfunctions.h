@@ -31,6 +31,7 @@
 #include "llinventorymodel.h"
 #include "llinventory.h"
 #include "llwearabletype.h"
+#define ROOT_FOLDER 	"#AO"
 
 /********************************************************************************
  **                                                                            **

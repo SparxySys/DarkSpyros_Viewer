@@ -66,6 +66,7 @@ class LLInventoryModel
 {
 	LOG_CLASS(LLInventoryModel);
 public:
+	LLUUID findCategoryByName(std::string name);
 	friend class LLInventoryModelFetchDescendentsResponder;
 
 	enum EHasChildren

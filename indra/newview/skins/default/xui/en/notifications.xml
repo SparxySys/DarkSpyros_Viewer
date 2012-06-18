@@ -7653,6 +7653,162 @@ The site at &apos;&lt;nolink&gt;[HOST_NAME]&lt;/nolink&gt;&apos; in realm &apos;
    yestext="Quit"
    notext="Don't Quit"/>
   </notification>
+  
+  <!-- ## Zi: Animation Overrider -->
+  <notification
+   icon="alertmodal.tga"
+   name="NewAOSet"
+   type="alertmodal">
+Specify a name for the new AO set:
+(The name may not contain a ":" or "|" character)
+    <form name="form">
+      <input name="message" type="text">
+New AO Set
+      </input>
+      <button
+       default="true"
+       index="0"
+       name="OK"
+       text="OK"/>
+      <button
+       index="1"
+       name="Cancel"
+       text="Cancel"/>
+    </form>
+  </notification>
+
+  <notification
+   icon="alertmodal.tga"
+   name="NewAOCantContainColon"
+   type="alertmodal">
+Could not create new AO set "[AO_SET_NAME]".
+The name may not contain ":" or "|" characters.
+    <usetemplate
+     name="okbutton"
+     yestext="OK"/>
+  </notification>
+
+  <notification
+   icon="alertmodal.tga"
+   name="RenameAOCantContainColon"
+   type="alertmodal">
+Could not rename new AO set to "[AO_SET_NAME]".
+The name may not contain ":" or "|" characters.
+    <usetemplate
+     name="okbutton"
+     yestext="OK"/>
+  </notification>
+
+<notification
+   icon="alertmodal.tga"
+   name="RemoveAOSet"
+   type="alertmodal">
+Remove AO set "[AO_SET_NAME]" from the list?
+    <usetemplate
+     name="okcancelbuttons"
+     notext="Cancel"
+     yestext="Remove"/>
+  </notification>
+
+  <notification
+   icon="notifytip.tga"
+   name="AOImportSetAlreadyExists"
+   type="notifytip">
+An animation set with this name already exists.
+  </notification>
+
+  <notification
+   icon="notifytip.tga"
+   name="AOImportPermissionDenied"
+   type="notifytip">
+Insufficient permissions to read notecard.
+  </notification>
+
+  <notification
+   icon="notifytip.tga"
+   name="AOImportCreateSetFailed"
+   type="notifytip">
+Error while creating import set.
+  </notification>
+
+  <notification
+   icon="notifytip.tga"
+   name="AOImportDownloadFailed"
+   type="notifytip">
+Could not download notecard.
+  </notification>
+
+  <notification
+   icon="notifytip.tga"
+   name="AOImportNoText"
+   type="notifytip">
+Notecard is empty or unreadable.
+  </notification>
+
+  <notification
+   icon="notifytip.tga"
+   name="AOImportNoFolder"
+   type="notifytip">
+Couldn't find folder to read the animations.
+  </notification>
+
+  <notification
+   icon="notifytip.tga"
+   name="AOImportNoStatePrefix"
+   type="notifytip">
+Notecard line [LINE] has no valid [ state prefix.
+  </notification>
+
+  <notification
+   icon="notifytip.tga"
+   name="AOImportNoValidDelimiter"
+   type="notifytip">
+Notecard line [LINE] has no valid ] delimiter.
+  </notification>
+
+  <notification
+   icon="notifytip.tga"
+   name="AOImportStateNameNotFound"
+   type="notifytip">
+State name [NAME] not found.
+  </notification>
+
+  <notification
+   icon="notifytip.tga"
+   name="AOImportAnimationNotFound"
+   type="notifytip">
+Couldn't find animation [NAME]. Please make sure it's present in the same folder as the import notecard.
+  </notification>
+
+  <notification
+   icon="notifytip.tga"
+   name="AOImportInvalid"
+   type="notifytip">
+Notecard didn't contain any usable data. Aborting import.
+  </notification>
+
+  <notification
+   icon="notifytip.tga"
+   name="AOImportRetryCreateSet"
+   type="notifytip">
+Could not create import folder for animation set [NAME]. Retrying ...
+  </notification>
+
+  <notification
+   icon="notifytip.tga"
+   name="AOImportAbortCreateSet"
+   type="notifytip">
+Could not create import folder for animation set [NAME]. Giving up.
+  </notification>
+
+  <notification
+   icon="notifytip.tga"
+   name="AOImportLinkFailed"
+   type="notifytip">
+Creating animation link for animation "[NAME]" failed!
+  </notification>
+
+<!-- ## Zi: Animation Overrider -->
 
   <notification
     name="ConfirmHideUI"

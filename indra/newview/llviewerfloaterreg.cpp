@@ -134,6 +134,7 @@
 #include "llfloatermodelpreview.h"
 #include "llcommandhandler.h"
 #include "llnearbychatbar.h"
+#include "ao.h"
 
 #include "exporttracker.h"
 #include "importtracker.h"
@@ -318,7 +319,8 @@ void LLViewerFloaterReg::registerFloaters()
 	LLFloaterReg::add("whitelist_entry", "floater_whitelist_entry.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterWhiteListEntry>);	
 	LLFloaterReg::add("window_size", "floater_window_size.xml", &LLFloaterReg::build<LLFloaterWindowSize>);
 	LLFloaterReg::add("world_map", "floater_world_map.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterWorldMap>);	
-
+	
+	LLFloaterReg::add("animation_overrider", "floater_ao.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FloaterAO>);
 	LLFloaterReg::add("export_object_floater","floater_prim_export.xml",&LLFloaterReg::build<ExportTrackerFloater>);
 	LLFloaterReg::add("import_object_floater","floater_prim_import.xml",&LLFloaterReg::build<ImportTrackerFloater>);
 	// *NOTE: Please keep these alphabetized for easier merges

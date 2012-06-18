@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <commands>
-  <command name="aboutland"
+  <command name="aoswitch"
+			available_in_toybox="true"
+			icon="Command_AOSwitch_Icon"
+			label_ref="Command_AOSwitch_Label"
+			tooltip_ref="Command_AOSwitch_Tooltip"
+			execute_function="Agent.ToggleAO"
+			execute_parameters="dummy"
+			is_running_function="Agent.CheckAO"
+			is_running_parameters="dummy"
+			/>
+  <command name="aomenu"
+           available_in_toybox="true"
+           icon="Command_AOMenu_Icon"
+           label_ref="Command_AOMenu_Label"
+           tooltip_ref="Command_AOMenu_Tooltip"
+           execute_function="Floater.ToggleOrBringToFront"
+           execute_parameters="animation_overrider"
+           is_running_function="Floater.IsOpen"
+           is_running_parameters="animation_overrider"
+           />
+	<command name="aboutland"
            available_in_toybox="true"
            icon="Command_AboutLand_Icon"
            label_ref="Command_AboutLand_Label"

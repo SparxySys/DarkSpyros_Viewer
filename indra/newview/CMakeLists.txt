@@ -79,7 +79,10 @@ include_directories(
 set(viewer_SOURCE_FILES
 	importtracker.cpp
 	exporttracker.cpp
-    groupchatlistener.cpp
+    ao.cpp
+	aoengine.cpp
+	aoset.cpp
+	groupchatlistener.cpp
     llaccountingcostmanager.cpp
     llagent.cpp
     llagentaccess.cpp
@@ -645,7 +648,10 @@ set(viewer_HEADER_FILES
     ViewerInstall.cmake
 	importtracker.h
 	exporttracker.h
-    groupchatlistener.h
+    ao.h
+	aoengine.h
+	aoset.h
+	groupchatlistener.h
     llaccountingcostmanager.h
     llagent.h
     llagentaccess.h

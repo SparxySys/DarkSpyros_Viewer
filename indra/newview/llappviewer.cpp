@@ -210,6 +210,7 @@
 #include "llavatariconctrl.h"
 #include "llgroupiconctrl.h"
 #include "llviewerassetstats.h"
+#include "aoengine.h"
 
 // Include for security api initialization
 #include "llsecapi.h"

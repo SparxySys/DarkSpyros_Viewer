@@ -16,6 +16,8 @@
     <command name="avatar"/>
     <command name="appearance"/>
     <command name="inventory"/>
+	<command name="aoswitch"/>
+	<command name="aomenu"/>
     <command name="search"/>
     <command name="places"/>
     <command name="voice"/>

@@ -81,6 +81,7 @@
 #include "llviewerwindow.h"
 #include "llvoavatarself.h"
 #include "llwearablelist.h"
+#include "aoengine.h"
 // [RLVa:KB] - Checked: 2011-05-22 (RLVa-1.3.1a)
 #include "rlvhandler.h"
 #include "rlvlocks.h"
@@ -110,6 +111,99 @@ void append_path(const LLUUID& id, std::string& path)
 		}
 	}
 	path.append(temp);
+}
+
+void change_item_parent(LLInventoryModel* model,
+						LLViewerInventoryItem* item,
+						const LLUUID& new_parent_id,
+						BOOL restamp)
+{
+	if (item->getParentUUID() != new_parent_id)
+	{
+		if(model->isObjectDescendentOf(item->getUUID(),AOEngine::instance().getAOFolder())
+			&& gSavedPerAccountSettings.getBOOL("ProtectAOFolders"))
+			return;
+
+		LLInventoryModel::update_list_t update;
+		LLInventoryModel::LLCategoryUpdate old_folder(item->getParentUUID(),-1);
+		update.push_back(old_folder);
+		LLInventoryModel::LLCategoryUpdate new_folder(new_parent_id, 1);
+		update.push_back(new_folder);
+		gInventory.accountForUpdate(update);
+
+		LLPointer<LLViewerInventoryItem> new_item = new LLViewerInventoryItem(item);
+		new_item->setParent(new_parent_id);
+		new_item->updateParentOnServer(restamp);
+		model->updateItem(new_item);
+		model->notifyObservers();
+	}
+}
+
+void change_category_parent(LLInventoryModel* model,
+	LLViewerInventoryCategory* cat,
+	const LLUUID& new_parent_id,
+	BOOL restamp)
+{
+	if (!model || !cat)
+	{
+		return;
+	}
+
+	// Can't move a folder into a child of itself.
+	if (model->isObjectDescendentOf(new_parent_id, cat->getUUID()))
+	{
+		return;
+	}
+	
+	if(model->isObjectDescendentOf(cat->getUUID(),AOEngine::instance().getAOFolder())
+		&& gSavedPerAccountSettings.getBOOL("ProtectAOFolders"))
+		return;
+
+	LLInventoryModel::update_list_t update;
+	LLInventoryModel::LLCategoryUpdate old_folder(cat->getParentUUID(), -1);
+	update.push_back(old_folder);
+	LLInventoryModel::LLCategoryUpdate new_folder(new_parent_id, 1);
+	update.push_back(new_folder);
+	model->accountForUpdate(update);
+
+	LLPointer<LLViewerInventoryCategory> new_cat = new LLViewerInventoryCategory(cat);
+	new_cat->setParent(new_parent_id);
+	new_cat->updateParentOnServer(restamp);
+	model->updateCategory(new_cat);
+	model->notifyObservers();
+}
+
+void remove_category(LLInventoryModel* model, const LLUUID& cat_id)
+{
+	if (!model || !get_is_category_removable(model, cat_id))
+	{
+		return;
+	}
+
+	// Look for any gestures and deactivate them
+	LLInventoryModel::cat_array_t	descendent_categories;
+	LLInventoryModel::item_array_t	descendent_items;
+	gInventory.collectDescendents(cat_id, descendent_categories, descendent_items, FALSE);
+
+	for (LLInventoryModel::item_array_t::const_iterator iter = descendent_items.begin();
+		 iter != descendent_items.end();
+		 ++iter)
+	{
+		const LLViewerInventoryItem* item = (*iter);
+		const LLUUID& item_id = item->getUUID();
+		if (item->getType() == LLAssetType::AT_GESTURE
+			&& LLGestureMgr::instance().isGestureActive(item_id))
+		{
+			LLGestureMgr::instance().deactivateGesture(item_id);
+		}
+	}
+
+	LLViewerInventoryCategory* cat = gInventory.getCategory(cat_id);
+	if (cat)
+	{
+		const LLUUID trash_id = model->findCategoryUUIDForType(LLFolderType::FT_TRASH);
+		change_category_parent(model, cat, trash_id, TRUE);
+	}
 }
 
 void rename_category(LLInventoryModel* model, const LLUUID& cat_id, const std::string& new_name)
@@ -393,6 +487,11 @@ BOOL get_is_category_removable(const LLInventoryModel* model, const LLUUID& id)
 	}
 // [/RLVa:KB]
 
+	
+	if((id==AOEngine::instance().getAOFolder() || model->isObjectDescendentOf(id,AOEngine::instance().getAOFolder()))
+		&& gSavedPerAccountSettings.getBOOL("ProtectAOFolders"))
+		return FALSE;
+
 	if (!isAgentAvatarValid()) return FALSE;
 
 	const LLInventoryCategory* category = model->getCategory(id);
@@ -434,6 +533,10 @@ BOOL get_is_category_renameable(const LLInventoryModel* model, const LLUUID& id)
 		return FALSE;
 	}
 // [/RLVa:KB]
+
+	if((id==AOEngine::instance().getAOFolder() || model->isObjectDescendentOf(id,AOEngine::instance().getAOFolder()))
+		&& gSavedPerAccountSettings.getBOOL("ProtectAOFolders"))
+	return FALSE;
 
 	LLViewerInventoryCategory* cat = model->getCategory(id);
 

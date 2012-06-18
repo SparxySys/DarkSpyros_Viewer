@@ -36,6 +36,7 @@
 #include "llvoavatardefines.h"
 
 #include <boost/signals2.hpp>
+#include "aoengine.h"
 
 extern const BOOL 	ANIMATE;
 extern const U8 	AGENT_STATE_TYPING;  // Typing indication
@@ -608,6 +609,9 @@ public:
 	bool			canEditParcel() const { return mCanEditParcel; }
 private:
 	bool			mCanEditParcel;
+	
+	static bool ToggleAO(const LLSD& dummy);
+	static bool CheckAO(const LLSD& dummy);
 
 	static void parcelChangedCallback();
 
