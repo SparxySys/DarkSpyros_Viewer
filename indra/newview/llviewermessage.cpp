@@ -107,6 +107,7 @@
 #include "llagentui.h"
 #include "llpanelblockedlist.h"
 #include "llpanelplaceprofile.h"
+#include "exporttracker.h"
 // [RLVa:KB] - Checked: 2010-03-09 (RLVa-1.2.0a)
 #include "rlvhandler.h"
 #include "rlvinventory.h"
@@ -4744,6 +4745,12 @@ void process_kill_object(LLMessageSystem *mesgsys, void **user_data)
 			}
 		}
 	}
+}
+
+void process_object_properties(LLMessageSystem *msg, void**user_data)
+{
+	JCExportTracker::processObjectProperties(msg, user_data);
+	LLSelectMgr::processObjectProperties(msg, user_data);
 }
 
 void process_time_synch(LLMessageSystem *mesgsys, void **user_data)

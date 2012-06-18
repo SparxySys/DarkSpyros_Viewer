@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<floater can_close="true" can_drag_on_left="false" can_minimize="true"
+     min_height="305" min_width="600" can_resize="true" width="700" height="305"
+     name="export_object_floater" title="Backup Objects">
+
+  <!--
+  -Patrick Sapinski (Monday, September 28, 2009)
+   -->
+
+  <text type="string" length="1" name="selection size label" height="15" width="166" halign="left" left="5" top="5" follows="left|top">Selection Size:</text>
+  <text type ="string" length="1" name="selection size" height="15" width="166" bottom_delta="18" halign="left" left_delta="0" follows="left|top">X 0.0, Y 0.0, Z 0.0</text>
+
+  <check_box bottom_delta="23" control_name="ExportJ2CTextures" follows="left|top"
+     height="16" initial_value="true" label="Export J2C textures" left_delta="0" name="export_j2c"
+     width="200" enabled="true"/>
+
+  <check_box bottom_delta="20" control_name="ExportTGATextures" follows="left|top"
+     height="16" initial_value="false" label="Export TGA textures" left_delta="0" name="export_tga"
+     width="200" enabled="true"/>
+  <check_box bottom_delta="20" control_name="ExportProperties" follows="left|top"
+     height="16" initial_value="true" label="Export Properties" left_delta="0" name="export_properties"
+     width="200" enabled="true"/>
+  <check_box bottom_delta="20" control_name="ExportInventory" follows="left|top"
+     height="16" initial_value="true" label="Export Contents" left_delta="20" name="export_contents"
+     width="200" enabled="true"/>
+  
+  <text type="string" length="1" bottom_delta="22" follows="left|top"
+     halign="left" height="16" left_delta="-17"
+     name="status" v_pad="0" width="178">
+	 Export Status:
+	</text>
+
+  <panel
+     name="a_box" left_delta="2" width="200" height="93"
+     border="true" bevel_style="in" follows="top|left" top_delta="15">
+    <text type="string" length="1" follows="top|left" height="97" left="5" name="status label" top="5">export status</text>
+  </panel>
+  
+  <!--
+  <panel
+     name="progress_bar" left_delta="0" width="200" height="10"
+     border="true" bevel_style="in" bottom_delta="14" follows="top|left">
+  </panel>
+  -->
+  <progress_bar
+        color_bar="1 1 1 0.96"
+        follows="top|left"
+        height="10"
+        bottom_delta="14"
+        left_delta="0"
+        layout="topleft"
+        name="progress_bar"
+        width="200"
+        visable="true" />
+  
+  <!--
+    <line_editor border_drop_shadow_visible="false" border_visible="false" top_delta="-70"
+	     control_name="export_status" drop_shadow_visible="true" enabled="false"
+	     follows="top|left" font="SansSerifSmall" halign="right" height="39"
+	     left_delta="0" max_length="254" mouse_opaque="false" name="name_label"
+	     width="210" />
+-->
+
+  <button bottom_delta="25" follows="left|top" halign="center" height="20"
+     label="Backup Selection" label_selected="" left_delta="-1"
+     name="export" tool_tip="Export the selected linksets" width="130" />
+  <button bottom_delta="0" follows="left|top" halign="center" height="20"
+     label="Close" label_selected="" left_delta="135" name="close" width="65" />
+ 
+	<tab_container top="5" enabled="true" follows="left|top|right|bottom" height="210" bottom="-10"
+	     left="220" name="export_tab" tab_position="top" width="470">
+	<panel border="true" bottom="-219" enabled="true" follows="left|top|right|bottom"
+       height="210" label="Objects" left="0" mouse_opaque="true"
+       name="object_panel" width="458">
+      <scroll_list name="object_result_list" left="5" right="-5" top="12" bottom="-30" column_padding="0"
+          follows="left|top|bottom|right" draw_heading="false" search_column="2">
+        <scroll_list.columns name="Selected" width="20" height="25" />
+        <scroll_list.columns name="Type" type="icon" width="20" height="25" />
+        <scroll_list.columns name="Name" label="Name" dynamicwidth="true" height="25" />
+        <!-- 
+        <scroll_list.columns name="Avatar ID" visible="false" />
+        <scroll_list.columns name="icon_rec" label="Received" type="icon" width="20" />
+        <scroll_list.columns name="UUID" label="UUID" visible="false"/>
+        
+        <column label="Properties" name="icon_prop" width="31" />
+        <column label="Inventories" name="icon_inv" width="31" />
+        <column name="Local ID" label="Local ID" width="65"/>
+        <column name="Position" label="Position" width="100"/>
+        <column name="Retries" label="Retries" width="31"/>-->
+      </scroll_list>
+	  <text bottom="-2" follows="bottom|left" height="20" 
+		 border_visible="false" h_pad="0" halign="left" left="20"
+		 mouse_opaque="true" name="select label" v_pad="0" width="166">Select:</text>
+	  <button bottom_delta="-3" follows="bottom|left" height="20" label="All"
+		 left="60" name="select_all_btn" width="40" />
+	  <button bottom_delta="0" follows="bottom|left" height="20" label="None"
+		 left_delta="42" name="select_none_btn" width="50" />
+	  <button bottom_delta="0" follows="bottom|left" height="20" label="Objects"
+		 left_delta="52" name="select_objects_btn" width="64" />
+	  <button bottom_delta="0" follows="bottom|left" height="20" label="Wearables"
+		 left_delta="66"  name="select_wearables_btn" width="80" />
+    </panel>
+    <panel border="true" bottom="-219" enabled="true" follows="left|top|right|bottom"
+       height="210" label="Inventory" left="0"
+       name="inventory_panel" width="458">
+      <scroll_list name="inventory_result_list" left="5" right="-5" top="12" bottom="-5" column_padding="0"
+          follows="left|top|bottom|right" draw_heading="true" multi_select="true"
+          search_column="1" tool_tip="Hold shift or control while clicking to select multiple entries">
+        <scroll_list.columns name="Name" label="Name" dynamicwidth="true" />
+        <scroll_list.columns name="UUID" label="UUID" width="100"/>
+        <scroll_list.columns name="Object ID" label="Object ID" width="75"/>
+        <scroll_list.columns name="Position" label="Position" width="65"/>
+        <!--
+        <column name="Retries" label="Retries" width="31"/>
+        -->
+        <scroll_list.columns label="Received" name="icon_rec" width="31" />
+      </scroll_list>
+    </panel>
+    <panel border="true" enabled="true" follows="left|top|right|bottom"
+       height="210" label="Errors" left="0"
+       name="error_panel" width="458">
+      <scroll_list name="error_result_list" left="5" right="-5" top="12" bottom="-5" column_padding="0"
+          follows="left|top|bottom|right" draw_heading="true" multi_select="true" 
+          search_column="1" tool_tip="Hold shift or control while clicking to select multiple entries">
+        <scroll_list.columns name="Name" label="Name" dynamicwidth="true" />
+        <scroll_list.columns name="Local ID" label="Local ID" dynamicwidth="true"/>
+        <scroll_list.columns name="Position" label="Position" width="165"/>
+        <scroll_list.columns name="Error Message" label="Error Message" dynamicwidth="true"/>
+      </scroll_list>
+    </panel> 
+  </tab_container>
+</floater>

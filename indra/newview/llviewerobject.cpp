@@ -243,6 +243,8 @@ LLViewerObject::LLViewerObject(const LLUUID &id, const LLPCode pcode, LLViewerRe
 	mState(0),
 	mMedia(NULL),
 	mClickAction(0),
+	mPropertiesRecieved(false),
+	mInventoryRecieved(false),
 	mObjectCost(0),
 	mLinksetCost(0),
 	mPhysicsCost(0),

@@ -57,6 +57,7 @@ LLFilePicker LLFilePicker::sInstance;
 #define XML_FILTER L"XML files (*.xml)\0*.xml\0"
 #define SLOBJECT_FILTER L"Objects (*.slobject)\0*.slobject\0"
 #define RAW_FILTER L"RAW files (*.raw)\0*.raw\0"
+#define HPA_FILTER L"HPA files (*.hpa)\0*.hpa\0"
 #define MODEL_FILTER L"Model files (*.dae)\0*.dae\0"
 #define SCRIPT_FILTER L"Script files (*.lsl)\0*.lsl\0"
 #endif
@@ -210,6 +211,10 @@ BOOL LLFilePicker::setupFilter(ELoadFilter filter)
 		mOFN.lpstrFilter = RAW_FILTER \
 			L"\0";
 		break;
+	case FFLOAD_HPA:
+		mOFN.lpstrFilter = HPA_FILTER \
+			L"\0";
+		break;	
 	case FFLOAD_MODEL:
 		mOFN.lpstrFilter = MODEL_FILTER \
 			L"\0";
@@ -491,6 +496,17 @@ BOOL LLFilePicker::getSaveFile(ESaveFilter filter, const std::string& filename)
 		mOFN.lpstrDefExt = L"raw";
 		mOFN.lpstrFilter =	RAW_FILTER \
 							L"\0";
+		break;
+	case FFSAVE_HPA:
+		if (filename.empty())
+		{
+			wcsncpy( mFilesW,L"untitled.hpa", FILENAME_BUFFER_SIZE);  /*Flawfinder: ignore*/
+		}
+		
+		mOFN.lpstrDefExt = L"hpa";
+		mOFN.lpstrFilter =
+		L"Hierarchical Prim Archive (*.hpa)\0*.hpa\0" \
+		L"\0";
 		break;
 	case FFSAVE_J2C:
 		if (filename.empty())

@@ -85,6 +85,7 @@ public:
 		FFLOAD_MODEL = 9,
 		FFLOAD_COLLADA = 10,
 		FFLOAD_SCRIPT = 11,
+		FFLOAD_HPA = 12,
 	};
 
 	enum ESaveFilter
@@ -105,6 +106,7 @@ public:
 		FFSAVE_PNG = 13,
 		FFSAVE_JPEG = 14,
 		FFSAVE_SCRIPT = 15,
+		FFSAVE_HPA = 16,
 	};
 
 	// open the dialog. This is a modal operation

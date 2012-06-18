@@ -82,6 +82,8 @@ void process_compressed_object_update(LLMessageSystem *mesgsys, void **user_data
 void process_cached_object_update(LLMessageSystem *mesgsys, void **user_data);
 void process_terse_object_update_improved(LLMessageSystem *mesgsys, void **user_data);
 
+void process_object_properties(LLMessageSystem *msg, void**user_data);
+
 void send_simulator_throttle_settings(const LLHost &host);
 void process_kill_object(	LLMessageSystem *mesgsys, void **user_data);
 void process_time_synch(	LLMessageSystem *mesgsys, void **user_data);

@@ -77,6 +77,8 @@ include_directories(
     )
 
 set(viewer_SOURCE_FILES
+	importtracker.cpp
+	exporttracker.cpp
     groupchatlistener.cpp
     llaccountingcostmanager.cpp
     llagent.cpp
@@ -640,6 +642,8 @@ set(VIEWER_BINARY_NAME "secondlife-bin" CACHE STRING
 set(viewer_HEADER_FILES
     CMakeLists.txt
     ViewerInstall.cmake
+	importtracker.h
+	exporttracker.h
     groupchatlistener.h
     llaccountingcostmanager.h
     llagent.h

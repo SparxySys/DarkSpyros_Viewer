@@ -77,6 +77,7 @@
 
 // system libraries
 #include <boost/tokenizer.hpp>
+#include "importtracker.h"
 
 class LLFileEnableUpload : public view_listener_t
 {
@@ -470,6 +471,16 @@ void upload_error(const std::string& error_message, const std::string& label, co
 	}
 	LLFilePicker::instance().reset();						
 }
+
+class ImportLinkset : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		ImportTrackerFloater* importfloater = dynamic_cast<ImportTrackerFloater*>(LLFloaterReg::getInstance("import_object_floater"));
+		importfloater->showOpenfile();
+		return true;
+	}
+};
 
 class LLFileEnableCloseWindow : public view_listener_t
 {
@@ -1283,6 +1294,7 @@ void init_menu_file()
 	view_listener_t::addCommit(new LLFileUploadAnim(), "File.UploadAnim");
 	view_listener_t::addCommit(new LLFileUploadModel(), "File.UploadModel");
 	view_listener_t::addCommit(new LLFileUploadBulk(), "File.UploadBulk");
+	view_listener_t::addCommit(new ImportLinkset(), "File.ImportLinkset");
 	view_listener_t::addCommit(new LLFileCloseWindow(), "File.CloseWindow");
 	view_listener_t::addCommit(new LLFileCloseAllWindows(), "File.CloseAllWindows");
 	view_listener_t::addEnable(new LLFileEnableCloseWindow(), "File.EnableCloseWindow");

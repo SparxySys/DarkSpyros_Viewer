@@ -135,6 +135,9 @@
 #include "llcommandhandler.h"
 #include "llnearbychatbar.h"
 
+#include "exporttracker.h"
+#include "importtracker.h"
+
 // *NOTE: Please add files in alphabetical order to keep merges easy.
 // [RLVa:KB] - Checked: 2010-03-11
 #include "rlvfloaters.h"
@@ -316,6 +319,8 @@ void LLViewerFloaterReg::registerFloaters()
 	LLFloaterReg::add("window_size", "floater_window_size.xml", &LLFloaterReg::build<LLFloaterWindowSize>);
 	LLFloaterReg::add("world_map", "floater_world_map.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterWorldMap>);	
 
+	LLFloaterReg::add("export_object_floater","floater_prim_export.xml",&LLFloaterReg::build<ExportTrackerFloater>);
+	LLFloaterReg::add("import_object_floater","floater_prim_import.xml",&LLFloaterReg::build<ImportTrackerFloater>);
 	// *NOTE: Please keep these alphabetized for easier merges
 	
 	LLFloaterReg::registerControlVariables(); // Make sure visibility and rect controls get preserved when saving

@@ -2379,7 +2379,8 @@ void register_viewer_callbacks(LLMessageSystem* msg)
 
 	msg->setHandlerFuncFast(_PREHASH_ImprovedInstantMessage,	process_improved_im);
 	msg->setHandlerFuncFast(_PREHASH_ScriptQuestion,			process_script_question);
-	msg->setHandlerFuncFast(_PREHASH_ObjectProperties,			LLSelectMgr::processObjectProperties, NULL);
+	//msg->setHandlerFuncFast(_PREHASH_ObjectProperties,			LLSelectMgr::processObjectProperties, NULL);
+	msg->setHandlerFuncFast(_PREHASH_ObjectProperties,			process_object_properties, NULL);
 	msg->setHandlerFuncFast(_PREHASH_ObjectPropertiesFamily,	LLSelectMgr::processObjectPropertiesFamily, NULL);
 	msg->setHandlerFunc("ForceObjectSelect", LLSelectMgr::processForceObjectSelect);
 

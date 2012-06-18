@@ -121,6 +121,8 @@
 #include "rlvlocks.h"
 // [/RLVa:KB]
 
+#include "exporttracker.h"
+
 using namespace LLVOAvatarDefines;
 
 typedef LLPointer<LLViewerObject> LLViewerObjectPtr;
@@ -2420,6 +2422,53 @@ class LLObjectEnableReportAbuse : public view_listener_t
 	}
 };
 
+class ValidateObjectExportPermission : public LLSelectedNodeFunctor
+{
+	virtual bool apply(LLSelectNode* node)
+	{
+			LLViewerObject* object = node->getObject();
+			bool isCreator = true;
+		
+			if(LLGridManager::getInstance()->isInSLMain() || LLGridManager::getInstance()->isInSLBeta()) {
+				isCreator = node->mPermissions->getCreator() == gAgent.getID();
+			}
+
+			return	object->permYouOwner() &&
+					object->permModify() &&
+					object->permCopy() &&
+					object->permTransfer() &&
+					isCreator;
+	}
+};
+
+bool visible_export_object()
+{
+	LLViewerObject* object = LLSelectMgr::getInstance()->getSelection()->getPrimaryObject();
+	bool new_value = (object != NULL);
+	if(!new_value) return false;
+
+	if (!object->isAvatar())
+	{
+		ValidateObjectExportPermission validate;
+		new_value = LLSelectMgr::getInstance()->getSelection()->applyToNodes(&validate);
+	}
+	else
+	{
+		LLVOAvatar* avatar = find_avatar_from_object(object); 
+		new_value = (avatar->isSelf());
+	}			
+
+	return new_value;
+}
+
+class ObjectExport : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		LLFloaterReg::showInstance("export_object_floater");
+		return true;
+	}
+};
 
 void handle_object_touch()
 {
@@ -8774,6 +8823,9 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLObjectReturn(), "Object.Return");
 	view_listener_t::addMenu(new LLObjectReportAbuse(), "Object.ReportAbuse");
 	view_listener_t::addMenu(new LLObjectMute(), "Object.Mute");
+	
+	view_listener_t::addMenu(new ObjectExport(), "Object.Export");
+	enable.add("Object.VisibleExport", boost::bind(&visible_export_object));
 
 	enable.add("Object.VisibleTake", boost::bind(&visible_take_object));
 	enable.add("Object.VisibleBuy", boost::bind(&visible_buy_object));

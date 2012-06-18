@@ -965,14 +965,14 @@ void LLXMLNode::writeToOstream(std::ostream& output_stream, const std::string& i
 	BOOL has_default_length = mDefault.isNull()?FALSE:(mLength == mDefault->mLength);
 
 	// stream the name
-	output_stream << indent << "<" << mName->mString << "\n";
+	output_stream << indent << "<" << mName->mString;
 
 	if (use_type_decorations)
 	{
 		// ID
 		if (mID != "")
 		{
-			output_stream << indent << " id=\"" << mID << "\"\n";
+			output_stream << indent << " id=\"" << mID << "\"";
 		}
 
 		// Type
@@ -980,26 +980,26 @@ void LLXMLNode::writeToOstream(std::ostream& output_stream, const std::string& i
 		{
 			switch (mType)
 			{
-			case TYPE_BOOLEAN:
-				output_stream << indent << " type=\"boolean\"\n";
-				break;
-			case TYPE_INTEGER:
-				output_stream << indent << " type=\"integer\"\n";
-				break;
-			case TYPE_FLOAT:
-				output_stream << indent << " type=\"float\"\n";
-				break;
-			case TYPE_STRING:
-				output_stream << indent << " type=\"string\"\n";
-				break;
-			case TYPE_UUID:
-				output_stream << indent << " type=\"uuid\"\n";
-				break;
-			case TYPE_NODEREF:
-				output_stream << indent << " type=\"noderef\"\n";
-				break;
-			default:
-				// default on switch(enum) eliminates a warning on linux
+ 			case TYPE_BOOLEAN:
+				output_stream << " type=\"boolean\"";
+ 				break;
+ 			case TYPE_INTEGER:
+				output_stream << " type=\"integer\"";
+ 				break;
+ 			case TYPE_FLOAT:
+				output_stream << " type=\"float\"";
+ 				break;
+ 			case TYPE_STRING:
+				output_stream << " type=\"string\"";
+ 				break;
+ 			case TYPE_UUID:
+				output_stream << " type=\"uuid\"";
+ 				break;
+ 			case TYPE_NODEREF:
+				output_stream << " type=\"noderef\"";
+ 				break;
+ 			default:
+ 				// default on switch(enum) eliminates a warning on linux
 				break;
 			};
 		}
@@ -1010,13 +1010,13 @@ void LLXMLNode::writeToOstream(std::ostream& output_stream, const std::string& i
 			switch (mEncoding)
 			{
 			case ENCODING_DECIMAL:
-				output_stream << indent << " encoding=\"decimal\"\n";
+				output_stream << indent << " encoding=\"decimal\"";
 				break;
 			case ENCODING_HEX:
-				output_stream << indent << " encoding=\"hex\"\n";
+				output_stream << indent << " encoding=\"hex\"";
 				break;
 			/*case ENCODING_BASE32:
-				output_stream << indent << " encoding=\"base32\"\n";
+				output_stream << indent << " encoding=\"base32\"";
 				break;*/
 			default:
 				// default on switch(enum) eliminates a warning on linux
@@ -1027,19 +1027,19 @@ void LLXMLNode::writeToOstream(std::ostream& output_stream, const std::string& i
 		// Precision
 		if (!has_default_precision && (mType == TYPE_INTEGER || mType == TYPE_FLOAT))
 		{
-			output_stream << indent << " precision=\"" << mPrecision << "\"\n";
+			output_stream << indent << " precision=\"" << mPrecision << "\"";
 		}
 
 		// Version
 		if (mVersionMajor > 0 || mVersionMinor > 0)
 		{
-			output_stream << indent << " version=\"" << mVersionMajor << "." << mVersionMinor << "\"\n";
+			output_stream << indent << " version=\"" << mVersionMajor << "." << mVersionMinor << "\"";
 		}
 
 		// Array length
 		if (!has_default_length && mLength > 0)
 		{
-			output_stream << indent << " length=\"" << mLength << "\"\n";
+			output_stream << indent << " length=\"" << mLength << "\"";
 		}
 	}
 
@@ -1067,13 +1067,13 @@ void LLXMLNode::writeToOstream(std::ostream& output_stream, const std::string& i
 				std::string attr_str = llformat(" %s=\"%s\"",
 											 attr.c_str(),
 											 escapeXML(child->mValue).c_str());
-				output_stream << indent << attr_str << "\n";
+				output_stream << attr_str;
 			}
 		}
 	}
 
 	// erase last \n before attaching final > or />
-	output_stream.seekp(-1, std::ios::cur);
+	//output_stream.seekp(-1, std::ios::cur);
 
 	if (mChildren.isNull() && mValue == "")
 	{
@@ -1082,7 +1082,9 @@ void LLXMLNode::writeToOstream(std::ostream& output_stream, const std::string& i
 	}
 	else
 	{
-		output_stream << ">\n";
+		output_stream << ">";
+		if (mValue.empty()) output_stream << "\n";
+		
 		if (mChildren.notNull())
 		{
 			// stream non-attributes
@@ -1095,9 +1097,14 @@ void LLXMLNode::writeToOstream(std::ostream& output_stream, const std::string& i
 		if (!mValue.empty())
 		{
 			std::string contents = getTextContents();
-			output_stream << indent << "    " << escapeXML(contents) << "\n";
+			output_stream << escapeXML(contents);
 		}
-		output_stream << indent << "</" << mName->mString << ">\n";
+		else
+		{	
+			output_stream << indent;
+		}
+		
+		output_stream << "</" << mName->mString << ">\n";
 	}
 }
 

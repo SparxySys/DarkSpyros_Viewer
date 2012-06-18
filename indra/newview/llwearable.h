@@ -48,7 +48,7 @@ class LLWearable
 	//--------------------------------------------------------------------
 	// Constructors and destructors
 	//--------------------------------------------------------------------
-private:
+public:
 	// Private constructors used by LLWearableList
 	LLWearable(const LLTransactionID& transactionID);
 	LLWearable(const LLAssetID& assetID);

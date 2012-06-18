@@ -167,9 +167,19 @@
          name="ManageMyAccount_url"
          parameter="WebLaunchJoinNow,http://secondlife.com/account/" />
       </menu_item_call>
-
       <menu_item_separator/>
-
+ 		<menu_item_call
+              label="Import Objects"
+              layout="topleft"
+              name="Import Objects">
+              <menu_item_call.on_click
+                  function="File.ImportLinkset"
+                  parameter="" />
+              <menu_item_call.on_enable
+                 function="File.EnableUpload" />
+            </menu_item_call>
+			
+		<menu_item_separator/>		
       <menu_item_call
          label="Preferences..."
          name="Preferences"
@@ -1183,6 +1193,16 @@
                  function="File.UploadBulk"
                  parameter="" />
             </menu_item_call>
+			<menu_item_call
+              label="Import Objects"
+              layout="topleft"
+              name="Import Objects">
+              <menu_item_call.on_click
+                  function="File.ImportLinkset"
+                  parameter="" />
+              <menu_item_call.on_enable
+                 function="File.EnableUpload" />
+            </menu_item_call>
             <menu_item_call
              label="Set Default Upload Permissions"
              name="perm prefs">
@@ -2139,17 +2159,16 @@
                function="Floater.Toggle"
                parameter="notifications_console" />
             </menu_item_call>
-            <menu_item_check
-               label="Texture Size Console"
-               name="Texture Size"
-               shortcut="control|shift|6">
-              <menu_item_check.on_check
-               function="Advanced.CheckConsole"
-               parameter="texture size" />
-              <menu_item_check.on_click
-               function="Advanced.ToggleConsole"
-               parameter="texture size" />
-            </menu_item_check>
+        <menu_item_check
+         label="Texture Area"
+         name="Texture Area">
+          <menu_item_check.on_check
+           function="Advanced.CheckInfoDisplay"
+           parameter="texture area" />
+          <menu_item_check.on_click
+           function="Advanced.ToggleInfoDisplay"
+           parameter="texture area" />
+        </menu_item_check>
             <menu_item_check
                label="Texture Category Console"
                name="Texture Category"
@@ -2572,16 +2591,6 @@
            parameter="texture priority" />
         </menu_item_check>
         <menu_item_check
-         label="Texture Area"
-         name="Texture Area">
-          <menu_item_check.on_check
-           function="Advanced.CheckInfoDisplay"
-           parameter="texture area" />
-          <menu_item_check.on_click
-           function="Advanced.ToggleInfoDisplay"
-           parameter="texture area" />
-        </menu_item_check>
-        <menu_item_check
          label="Face Area"
          name="Face Area">
           <menu_item_check.on_check
@@ -2681,6 +2690,16 @@
            function="Advanced.ToggleInfoDisplay"
            parameter="sculpt" />
 		</menu_item_check>
+       <menu_item_check
+          label="Texture Size"
+          name="Texture Size">
+      <menu_item_check.on_check
+        function="Advanced.CheckInfoDisplay"
+        parameter="texture size" />
+      <menu_item_check.on_click
+        function="Advanced.ToggleInfoDisplay"
+        parameter="texture size" />
+      </menu_item_check>
       </menu>
         <menu
          create_jump_keys="true"

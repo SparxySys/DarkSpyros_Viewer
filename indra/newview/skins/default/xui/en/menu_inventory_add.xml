@@ -63,6 +63,16 @@
                      function="File.UploadBulk"
                      parameter="" />
                 </menu_item_call>
+				<menu_item_call
+                  label="Import Objects"
+                  layout="topleft"
+                  name="Import Objects">
+                  <menu_item_call.on_click
+                    function="File.ImportLinkset"
+                    parameter="" />
+                  <menu_item_call.on_enable
+                    function="File.EnableUpload" />
+                </menu_item_call>
 	            <menu_item_call
 	             label="Set Default Upload Permissions"
 	             name="perm prefs">

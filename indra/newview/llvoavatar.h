@@ -715,8 +715,8 @@ public:
 	virtual BOOL 		detachObject(LLViewerObject *viewer_object);
 	void				cleanupAttachedMesh( LLViewerObject* pVO );
 	static LLVOAvatar*  findAvatarFromAttachment(LLViewerObject* obj);
-protected:
 	LLViewerJointAttachment* getTargetAttachmentPoint(LLViewerObject* viewer_object);
+protected:
 	void 				lazyAttach();
 	void				rebuildRiggedAttachments( void );
 
