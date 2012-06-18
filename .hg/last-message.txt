@@ -1,1 +1,1 @@
-Merged in RLVa
+Fixed installer & strings.

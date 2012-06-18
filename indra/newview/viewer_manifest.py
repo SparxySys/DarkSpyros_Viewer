@@ -570,18 +570,18 @@ class WindowsManifest(ViewerManifest):
         if self.default_channel():
             if self.default_grid():
                 # release viewer
-                installer_file = "Second_Life_%(version_dashes)s_Setup.exe"
+                installer_file = "DarkSpyros_Viewer_%(version_dashes)s_Setup.exe"
                 grid_vars_template = """
                 OutFile "%(installer_file)s"
                 !define INSTFLAGS "%(flags)s"
-                !define INSTNAME   "SecondLifeViewer"
-                !define SHORTCUT   "Second Life Viewer"
-                !define URLNAME   "secondlife"
-                Caption "Second Life"
+                !define INSTNAME   "DarkSpyrosViewer"
+                !define SHORTCUT   "DarkSpyro's Viewer"
+                !define URLNAME   "darkspyrosviewer"
+                Caption "DarkSpyro's Viewer"
                 """
             else:
                 # beta grid viewer
-                installer_file = "Second_Life_%(version_dashes)s_(%(grid_caps)s)_Setup.exe"
+                installer_file = "DarkSpyros_Viewer_%(version_dashes)s_Setup.exe"
                 grid_vars_template = """
                 OutFile "%(installer_file)s"
                 !define INSTFLAGS "%(flags)s"
@@ -850,6 +850,8 @@ class DarwinManifest(ViewerManifest):
                 app_name = "Second Life " + self.args['grid']
             else:
                 app_name = channel_standin.strip()
+				
+            app_name = "DarkSpyro's Viewer"
 
             # Hack:
             # Because there is no easy way to coerce the Finder into positioning

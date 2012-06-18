@@ -1,5 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; secondlife setup.nsi
+;; DarkSpyrosViewer setup.nsi
 ;; Copyright 2004-2011, Linden Research, Inc.
 ;;
 ;; This library is free software; you can redistribute it and/or
@@ -76,9 +76,9 @@ LangString LanguageCode ${LANG_TRADCHINESE}  "zh"
 ;; Tweak for different servers/builds (this placeholder is replaced by viewer_manifest.py)
 ;; For example:
 ;; !define INSTFLAGS "%(flags)s"
-;; !define INSTNAME   "SecondLife%(grid_caps)s"
+;; !define INSTNAME   "DarkSpyrosViewer%(grid_caps)s"
 ;; !define SHORTCUT   "Second Life (%(grid_caps)s)"
-;; !define URLNAME   "secondlife%(grid)s"
+;; !define URLNAME   "DarkSpyrosViewer%(grid)s"
 ;; !define UNINSTALL_SETTINGS 1
 
 %%GRID_VARS%%
@@ -250,19 +250,19 @@ FunctionEnd
 ; Close the program, if running. Modifies no variables.
 ; Allows user to bail out of install process.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-Function CloseSecondLife
+Function CloseDarkSpyrosViewer
   Push $0
   FindWindow $0 "Second Life" ""
   IntCmp $0 0 DONE
   
   StrCmp $SKIP_DIALOGS "true" CLOSE
-    MessageBox MB_OKCANCEL $(CloseSecondLifeInstMB) IDOK CLOSE IDCANCEL CANCEL_INSTALL
+    MessageBox MB_OKCANCEL $(CloseDarkSpyrosViewerInstMB) IDOK CLOSE IDCANCEL CANCEL_INSTALL
 
   CANCEL_INSTALL:
     Quit
 
   CLOSE:
-    DetailPrint $(CloseSecondLifeInstDP)
+    DetailPrint $(CloseDarkSpyrosViewerInstDP)
     SendMessage $0 16 0 0
 
   LOOP:
@@ -277,7 +277,7 @@ Function CloseSecondLife
 FunctionEnd
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Test our connection to secondlife.com
+; Test our connection to DarkSpyrosViewer.com
 ; Also allows us to count attempted installs by examining web logs.
 ; *TODO: Return current SL version info and have installer check
 ; if it is up to date.
@@ -296,7 +296,7 @@ Function CheckNetworkConnection
     ; Don't show secondary progress bar, this will be quick.
     NSISdl::download_quiet \
         /TIMEOUT=${HTTP_TIMEOUT} \
-        "http://install.secondlife.com/check/?stubtag=$2&version=${VERSION_LONG}" \
+        "http://install.DarkSpyrosViewer.com/check/?stubtag=$2&version=${VERSION_LONG}" \
         $0
     Pop $1 ; Return value, either "success", "cancel" or an error message
     ; MessageBox MB_OK "Download result: $1"
@@ -316,7 +316,7 @@ FunctionEnd
 ;
 ; If we are being called through auto-update, we need to uninstall any
 ; existing V2 installation. Otherwise, we wind up with
-; SecondLifeViewer2 and SecondLifeViewer installations existing side
+; DarkSpyrosViewer and DarkSpyrosViewerViewer installations existing side
 ; by side no indication which to use.
 ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Function CheckWillUninstallV2
@@ -324,8 +324,8 @@ Function CheckWillUninstallV2
   StrCpy $DO_UNINSTALL_V2 ""
 
   StrCmp $SKIP_DIALOGS "true" 0 CHECKV2_DONE
-  StrCmp $INSTDIR "$PROGRAMFILES\SecondLifeViewer2" CHECKV2_DONE ; don't uninstall our own install dir.
-  IfFileExists "$PROGRAMFILES\SecondLifeViewer2\uninst.exe" CHECKV2_FOUND CHECKV2_DONE
+  StrCmp $INSTDIR "$PROGRAMFILES\DarkSpyrosViewer" CHECKV2_DONE ; don't uninstall our own install dir.
+  IfFileExists "$PROGRAMFILES\DarkSpyrosViewer\uninst.exe" CHECKV2_FOUND CHECKV2_DONE
 
 CHECKV2_FOUND:
   StrCpy $DO_UNINSTALL_V2 "true"
@@ -343,8 +343,8 @@ Push $0
 Push $1
 Push $2
 
-    RMDir /r "$TEMP\SecondLifeSettingsBackup"
-    CreateDirectory "$TEMP\SecondLifeSettingsBackup"
+    RMDir /r "$TEMP\DarkSpyrosViewerSettingsBackup"
+    CreateDirectory "$TEMP\DarkSpyrosViewerSettingsBackup"
     StrCpy $0 0 ; Index number used to iterate via EnumRegKey
 
   LOOP:
@@ -357,8 +357,8 @@ Push $2
     ; Required since ProfileImagePath is of type REG_EXPAND_SZ
     ExpandEnvStrings $2 $2
 
-    CreateDirectory "$TEMP\SecondLifeSettingsBackup\$0"
-    CopyFiles /SILENT "$2\Application Data\SecondLife\*" "$TEMP\SecondLifeSettingsBackup\$0"
+    CreateDirectory "$TEMP\DarkSpyrosViewerSettingsBackup\$0"
+    CopyFiles /SILENT "$2\Application Data\DarkSpyrosViewer\*" "$TEMP\DarkSpyrosViewerSettingsBackup\$0"
 
   CONTINUE:
     IntOp $0 $0 + 1
@@ -369,12 +369,12 @@ Pop $2
 Pop $1
 Pop $0
 
-; Copy files in Documents and Settings\All Users\SecondLife
+; Copy files in Documents and Settings\All Users\DarkSpyrosViewer
 Push $0
     ReadRegStr $0 HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" "Common AppData"
     StrCmp $0 "" +2
-    CreateDirectory "$TEMP\SecondLifeSettingsBackup\AllUsers\"
-    CopyFiles /SILENT "$2\Application Data\SecondLife\*" "$TEMP\SecondLifeSettingsBackup\AllUsers\"
+    CreateDirectory "$TEMP\DarkSpyrosViewerSettingsBackup\AllUsers\"
+    CopyFiles /SILENT "$2\Application Data\DarkSpyrosViewer\*" "$TEMP\DarkSpyrosViewerSettingsBackup\AllUsers\"
 Pop $0
 
 FunctionEnd
@@ -400,8 +400,8 @@ Push $2
     ; Required since ProfileImagePath is of type REG_EXPAND_SZ
     ExpandEnvStrings $2 $2
 
-    CreateDirectory "$2\Application Data\SecondLife\"
-    CopyFiles /SILENT "$TEMP\SecondLifeSettingsBackup\$0\*" "$2\Application Data\SecondLife\" 
+    CreateDirectory "$2\Application Data\DarkSpyrosViewer\"
+    CopyFiles /SILENT "$TEMP\DarkSpyrosViewerSettingsBackup\$0\*" "$2\Application Data\DarkSpyrosViewer\" 
 
   CONTINUE:
     IntOp $0 $0 + 1
@@ -412,12 +412,12 @@ Pop $2
 Pop $1
 Pop $0
 
-; Copy files in Documents and Settings\All Users\SecondLife
+; Copy files in Documents and Settings\All Users\DarkSpyrosViewer
 Push $0
     ReadRegStr $0 HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" "Common AppData"
     StrCmp $0 "" +2
-    CreateDirectory "$2\Application Data\SecondLife\"
-    CopyFiles /SILENT "$TEMP\SecondLifeSettingsBackup\AllUsers\*" "$2\Application Data\SecondLife\" 
+    CreateDirectory "$2\Application Data\DarkSpyrosViewer\"
+    CopyFiles /SILENT "$TEMP\DarkSpyrosViewerSettingsBackup\AllUsers\*" "$2\Application Data\DarkSpyrosViewer\" 
 Pop $0
 
 FunctionEnd
@@ -443,7 +443,7 @@ Push $2
     ; Required since ProfileImagePath is of type REG_EXPAND_SZ
     ExpandEnvStrings $2 $2
 
-    RMDir /r "$TEMP\SecondLifeSettingsBackup\$0\*"
+    RMDir /r "$TEMP\DarkSpyrosViewerSettingsBackup\$0\*"
 
   CONTINUE:
     IntOp $0 $0 + 1
@@ -454,11 +454,11 @@ Pop $2
 Pop $1
 Pop $0
 
-; Copy files in Documents and Settings\All Users\SecondLife
+; Copy files in Documents and Settings\All Users\DarkSpyrosViewer
 Push $0
     ReadRegStr $0 HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" "Common AppData"
     StrCmp $0 "" +2
-    RMDir /r "$TEMP\SecondLifeSettingsBackup\AllUsers\*"
+    RMDir /r "$TEMP\DarkSpyrosViewerSettingsBackup\AllUsers\*"
 Pop $0
 
 FunctionEnd
@@ -486,7 +486,7 @@ FunctionEnd
 ;    ; Required since ProfileImagePath is of type REG_EXPAND_SZ
 ;    ExpandEnvStrings $2 $2
 ;
-;    RMDir /r "$2\Application Data\SecondLife\"
+;    RMDir /r "$2\Application Data\DarkSpyrosViewer\"
 ;
 ;  CONTINUE:
 ;    IntOp $0 $0 + 1
@@ -497,11 +497,11 @@ FunctionEnd
 ;Pop $1
 ;Pop $0
 ;
-;; Copy files in Documents and Settings\All Users\SecondLife
+;; Copy files in Documents and Settings\All Users\DarkSpyrosViewer
 ;Push $0
 ;    ReadRegStr $0 HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" "Common AppData"
 ;    StrCmp $0 "" +2
-;    RMDir /r "$2\Application Data\SecondLife\"
+;    RMDir /r "$2\Application Data\DarkSpyrosViewer\"
 ;Pop $0
 ;
 ;FunctionEnd
@@ -552,12 +552,12 @@ FunctionEnd
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Delete files in Documents and Settings\<user>\SecondLife
-; Delete files in Documents and Settings\All Users\SecondLife
+; Delete files in Documents and Settings\<user>\DarkSpyrosViewer
+; Delete files in Documents and Settings\All Users\DarkSpyrosViewer
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Function un.DocumentsAndSettingsFolder
 
-; Delete files in Documents and Settings\<user>\SecondLife
+; Delete files in Documents and Settings\<user>\DarkSpyrosViewer
 Push $0
 Push $1
 Push $2
@@ -577,14 +577,14 @@ Push $2
     ExpandEnvStrings $2 $2
 
         ; Remove all cache and settings files but leave any other .txt files to preserve the chat logs
-;    RMDir /r "$2\Application Data\SecondLife\logs"
-    RMDir /r "$2\Application Data\SecondLife\browser_profile"
-    RMDir /r "$2\Application Data\SecondLife\user_settings"
-    Delete  "$2\Application Data\SecondLife\*.xml"
-    Delete  "$2\Application Data\SecondLife\*.bmp"
-    Delete  "$2\Application Data\SecondLife\search_history.txt"
-    Delete  "$2\Application Data\SecondLife\plugin_cookies.txt"
-    Delete  "$2\Application Data\SecondLife\typed_locations.txt"
+;    RMDir /r "$2\Application Data\DarkSpyrosViewer\logs"
+    RMDir /r "$2\Application Data\DarkSpyrosViewer\browser_profile"
+    RMDir /r "$2\Application Data\DarkSpyrosViewer\user_settings"
+    Delete  "$2\Application Data\DarkSpyrosViewer\*.xml"
+    Delete  "$2\Application Data\DarkSpyrosViewer\*.bmp"
+    Delete  "$2\Application Data\DarkSpyrosViewer\search_history.txt"
+    Delete  "$2\Application Data\DarkSpyrosViewer\plugin_cookies.txt"
+    Delete  "$2\Application Data\DarkSpyrosViewer\typed_locations.txt"
 
   CONTINUE:
     IntOp $0 $0 + 1
@@ -595,17 +595,17 @@ Pop $2
 Pop $1
 Pop $0
 
-; Delete files in Documents and Settings\All Users\SecondLife
+; Delete files in Documents and Settings\All Users\DarkSpyrosViewer
 Push $0
   ReadRegStr $0 HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" "Common AppData"
   StrCmp $0 "" +2
-  RMDir /r "$0\SecondLife"
+  RMDir /r "$0\DarkSpyrosViewer"
 Pop $0
 
-; Delete files in C:\Windows\Application Data\SecondLife
+; Delete files in C:\Windows\Application Data\DarkSpyrosViewer
 ; If the user is running on a pre-NT system, Application Data lives here instead of
 ; in Documents and Settings.
-RMDir /r "$WINDIR\Application Data\SecondLife"
+RMDir /r "$WINDIR\Application Data\DarkSpyrosViewer"
 
 FunctionEnd
 
@@ -613,17 +613,17 @@ FunctionEnd
 ; Close the program, if running. Modifies no variables.
 ; Allows user to bail out of uninstall process.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-Function un.CloseSecondLife
+Function un.CloseDarkSpyrosViewer
   Push $0
   FindWindow $0 "Second Life" ""
   IntCmp $0 0 DONE
-  MessageBox MB_OKCANCEL $(CloseSecondLifeUnInstMB) IDOK CLOSE IDCANCEL CANCEL_UNINSTALL
+  MessageBox MB_OKCANCEL $(CloseDarkSpyrosViewerUnInstMB) IDOK CLOSE IDCANCEL CANCEL_UNINSTALL
 
   CANCEL_UNINSTALL:
     Quit
 
   CLOSE:
-    DetailPrint $(CloseSecondLifeUnInstDP)
+    DetailPrint $(CloseDarkSpyrosViewerUnInstDP)
     SendMessage $0 16 0 0
 
   LOOP:
@@ -648,7 +648,7 @@ Function un.RemovePassword
 DetailPrint "Removing Second Life password"
 
 SetShellVarContext current
-Delete "$APPDATA\SecondLife\user_settings\password.dat"
+Delete "$APPDATA\DarkSpyrosViewer\user_settings\password.dat"
 SetShellVarContext all
 
 FunctionEnd
@@ -675,8 +675,8 @@ Delete "$INSTDIR\dronesettings.ini"
 Delete "$INSTDIR\message_template.msg"
 Delete "$INSTDIR\newview.pdb"
 Delete "$INSTDIR\newview.map"
-Delete "$INSTDIR\SecondLife.pdb"
-Delete "$INSTDIR\SecondLife.map"
+Delete "$INSTDIR\DarkSpyrosViewer.pdb"
+Delete "$INSTDIR\DarkSpyrosViewer.map"
 Delete "$INSTDIR\comm.dat"
 Delete "$INSTDIR\*.glsl"
 Delete "$INSTDIR\motions\*.lla"
@@ -730,7 +730,7 @@ Call un.CheckIfAdministrator		; Make sure the user can install/uninstall
 SetShellVarContext all			
 
 ; Make sure we're not running
-Call un.CloseSecondLife
+Call un.CloseDarkSpyrosViewer
 
 ; Clean up registry keys and subkeys (these should all be !defines somewhere)
 DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Linden Research, Inc.\$INSTPROG"
@@ -928,8 +928,8 @@ Call CheckWindowsVersion		; warn if on Windows 98/ME
 Call CheckCPUFlags			; Make sure we have SSE2 support
 Call CheckIfAdministrator		; Make sure the user can install/uninstall
 Call CheckIfAlreadyCurrent		; Make sure that we haven't already installed this version
-Call CloseSecondLife			; Make sure we're not running
-Call CheckNetworkConnection		; ping secondlife.com
+Call CloseDarkSpyrosViewer			; Make sure we're not running
+Call CheckNetworkConnection		; ping DarkSpyrosViewer.com
 Call CheckWillUninstallV2               ; See if a V2 install exists and will be removed.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -971,13 +971,13 @@ CreateShortCut	"$SMPROGRAMS\$INSTSHORTCUT\$INSTSHORTCUT.lnk" \
 
 WriteINIStr		"$SMPROGRAMS\$INSTSHORTCUT\SL Create Account.url" \
 				"InternetShortcut" "URL" \
-				"http://join.secondlife.com/"
+				"http://join.DarkSpyrosViewer.com/"
 WriteINIStr		"$SMPROGRAMS\$INSTSHORTCUT\SL Your Account.url" \
 				"InternetShortcut" "URL" \
-				"http://www.secondlife.com/account/"
+				"http://www.DarkSpyrosViewer.com/account/"
 WriteINIStr		"$SMPROGRAMS\$INSTSHORTCUT\SL Scripting Language Help.url" \
 				"InternetShortcut" "URL" \
-                "http://wiki.secondlife.com/wiki/LSL_Portal"
+                "http://wiki.DarkSpyrosViewer.com/wiki/LSL_Portal"
 CreateShortCut	"$SMPROGRAMS\$INSTSHORTCUT\Uninstall $INSTSHORTCUT.lnk" \
 				'"$INSTDIR\uninst.exe"' ''
 
@@ -1022,9 +1022,9 @@ WriteUninstaller "$INSTDIR\uninst.exe"
 
 ; Uninstall existing "Second Life Viewer 2" install if needed.
 StrCmp $DO_UNINSTALL_V2 "" REMOVE_SLV2_DONE
-  ExecWait '"$PROGRAMFILES\SecondLifeViewer2\uninst.exe" /S _?=$PROGRAMFILES\SecondLifeViewer2'
-  Delete "$PROGRAMFILES\SecondLifeViewer2\uninst.exe" ; with _? option above, uninst.exe will be left behind.
-  RMDir "$PROGRAMFILES\SecondLifeViewer2" ; will remove only if empty.
+  ExecWait '"$PROGRAMFILES\DarkSpyrosViewer\uninst.exe" /S _?=$PROGRAMFILES\DarkSpyrosViewer'
+  Delete "$PROGRAMFILES\DarkSpyrosViewer\uninst.exe" ; with _? option above, uninst.exe will be left behind.
+  RMDir "$PROGRAMFILES\DarkSpyrosViewer" ; will remove only if empty.
 
   Call RestoreUserFiles
   Call RemoveTempUserFiles
