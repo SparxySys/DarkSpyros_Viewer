@@ -465,8 +465,9 @@ class WindowsManifest(ViewerManifest):
                 self.path("qtgui4.dll")
                 self.path("qtnetwork4.dll")
                 self.path("qtopengl4.dll")
+                self.path("qtsql4.dll")
                 self.path("qtwebkit4.dll")
-                self.path("qtxmlpatterns4.dll")
+                self.path("qtxml4.dll")
                 self.path("ssleay32.dll")
 
                 # For WebKit/Qt plugin runtimes (image format plugins)

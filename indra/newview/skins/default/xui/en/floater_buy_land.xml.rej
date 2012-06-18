@@ -1,0 +1,24 @@
+--- floater_buy_land.xml
++++ floater_buy_land.xml
+@@ -144,8 +144,8 @@
+     </floater.string>
+     <floater.string
+      name="info_price_string">
+-        L$ [PRICE]
+-(L$ [PRICE_PER_SQM]/m²)
++        [CUR] [PRICE]
++([CUR] [PRICE_PER_SQM]/m²)
+ [SOLD_WITH_OBJECTS]
+     </floater.string>
+     <floater.string
+@@ -464,8 +464,8 @@
+      name="info_price"
+      top_pad="1"
+      width="180">
+-        L$ 1500
+-(L$ 1.1/m²)
++        [CUR] 1500
++([CUR] 1.1/m²)
+ sold with objects
+     </text>
+     <text

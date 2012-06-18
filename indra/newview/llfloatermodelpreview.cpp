@@ -114,6 +114,7 @@
 #include "llviewershadermgr.h"
 #include "glod/glod.h"
 #include <boost/algorithm/string.hpp>
+#include "llworld.h"
 
 
 const S32 SLM_SUPPORTED_VERSION = 3;
@@ -498,7 +499,7 @@ BOOL LLFloaterModelPreview::postBuild()
 			text->setMouseDownCallback(boost::bind(&LLModelPreview::setPreviewLOD, mModelPreview, i));
 		}
 	}
-	std::string current_grid = LLGridManager::getInstance()->getGridLabel();
+	std::string current_grid = LLGridManager::getInstance()->getGridNick();
 	std::transform(current_grid.begin(),current_grid.end(),current_grid.begin(),::tolower);
 	std::string validate_url;
 	if (current_grid == "agni")
@@ -3401,7 +3402,10 @@ void LLModelPreview::rebuildUploadData()
 		}
 	}
 
-	F32 max_import_scale = (DEFAULT_MAX_PRIM_SCALE-0.1f)/max_scale;
+	// F32 max_import_scale = (DEFAULT_MAX_PRIM_SCALE-0.1f)/max_scale;
+	
+	F32 region_max_prim_scale = LLWorld::getInstance()->getRegionMaxPrimScale();
+	F32 max_import_scale = (region_max_prim_scale-0.1f)/max_scale;
 
 	F32 max_axis = llmax(mPreviewScale.mV[0], mPreviewScale.mV[1]);
 	max_axis = llmax(max_axis, mPreviewScale.mV[2]);
@@ -5749,12 +5753,14 @@ void LLFloaterModelPreview::toggleCalculateButton(bool visible)
 
 	if (visible)
 	{
+		std::string type_currency = LLGridManager::getInstance()->getCurrency();
 		std::string tbd = getString("tbd");
 		childSetTextArg("prim_weight", "[EQ]", tbd);
 		childSetTextArg("download_weight", "[ST]", tbd);
 		childSetTextArg("server_weight", "[SIM]", tbd);
 		childSetTextArg("physics_weight", "[PH]", tbd);
 		childSetTextArg("upload_fee", "[FEE]", tbd);
+		childSetTextArg("upload_fee", "[CUR]", type_currency);
 		childSetTextArg("price_breakdown", "[STREAMING]", tbd);
 		childSetTextArg("price_breakdown", "[PHYSICS]", tbd);
 		childSetTextArg("price_breakdown", "[INSTANCES]", tbd);
@@ -5792,12 +5798,13 @@ void LLFloaterModelPreview::handleModelPhysicsFeeReceived()
 {
 	const LLSD& result = mModelPhysicsFee;
 	mUploadModelUrl = result["url"].asString();
-
+	std::string type_currency = LLGridManager::getInstance()->getCurrency();
 	childSetTextArg("prim_weight", "[EQ]", llformat("%0.3f", result["resource_cost"].asReal()));
 	childSetTextArg("download_weight", "[ST]", llformat("%0.3f", result["model_streaming_cost"].asReal()));
 	childSetTextArg("server_weight", "[SIM]", llformat("%0.3f", result["simulation_cost"].asReal()));
 	childSetTextArg("physics_weight", "[PH]", llformat("%0.3f", result["physics_cost"].asReal()));
 	childSetTextArg("upload_fee", "[FEE]", llformat("%d", result["upload_price"].asInteger()));
+	childSetTextArg("upload_fee", "[CUR]", type_currency);
 	childSetTextArg("price_breakdown", "[STREAMING]", llformat("%d", result["upload_price_breakdown"]["mesh_streaming"].asInteger()));
 	childSetTextArg("price_breakdown", "[PHYSICS]", llformat("%d", result["upload_price_breakdown"]["mesh_physics"].asInteger()));
 	childSetTextArg("price_breakdown", "[INSTANCES]", llformat("%d", result["upload_price_breakdown"]["mesh_instance"].asInteger()));

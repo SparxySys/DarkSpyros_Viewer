@@ -542,11 +542,9 @@ void LLMediaCtrl::clearCache()
 void LLMediaCtrl::navigateTo( std::string url_in, std::string mime_type)
 {
 	// don't browse to anything that starts with secondlife:// or sl://
-	const std::string protocol1 = "secondlife://";
-	const std::string protocol2 = "sl://";
-	if ((LLStringUtil::compareInsensitive(url_in.substr(0, protocol1.length()), protocol1) == 0) ||
-	    (LLStringUtil::compareInsensitive(url_in.substr(0, protocol2.length()), protocol2) == 0))
-	{
+	LLSLURL is_slurl(url_in);
+ 	if(LLSLURL::INVALID != is_slurl.getType())
+ 	{
 		// TODO: Print out/log this attempt?
 		// llinfos << "Rejecting attempt to load restricted website :" << urlIn << llendl;
 		return;
@@ -593,9 +591,13 @@ void LLMediaCtrl::navigateToLocalPage( const std::string& subdir, const std::str
 	}
 	if (ensureMediaSourceExists())
 	{
-		mCurrentNavUrl = expanded_filename;
+#if LL_WINDOWS
+		std::replace(expanded_filename.begin(), expanded_filename.end(), '\\', '/');
+#endif
+		std::string uri = "file:///" + expanded_filename;
+		mCurrentNavUrl = uri;
 		mMediaSource->setSize(mTextureWidth, mTextureHeight);
-		mMediaSource->navigateTo(expanded_filename, "text/html", false);
+		mMediaSource->navigateTo(uri, "text/html");
 	}
 
 }

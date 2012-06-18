@@ -29,9 +29,13 @@ if (STANDALONE)
     set(WEBKITLIBPLUGIN OFF CACHE BOOL
         "WEBKITLIBPLUGIN support for the llplugin/llmedia test apps.")
 else (STANDALONE)
-    use_prebuilt_binary(llqtwebkit)
-    set(WEBKITLIBPLUGIN ON CACHE BOOL
-        "WEBKITLIBPLUGIN support for the llplugin/llmedia test apps.")
+  if(NOT DARWIN)
+     use_prebuilt_binary(zen-qt)
+  endif(NOT DARWIN)
+  use_prebuilt_binary(llqtwebkit)
+  set(WEBKITLIBPLUGIN ON CACHE BOOL
+      "WEBKITLIBPLUGIN support for the llplugin/llmedia test apps.")
+
 endif (STANDALONE)
 
 if (WINDOWS)

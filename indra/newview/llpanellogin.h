@@ -61,23 +61,25 @@ public:
 		void (*callback)(S32 option, void* user_data), 
 		void* callback_data);
 
-	static void setFields(LLPointer<LLCredential> credential, BOOL remember);
+	static void setFields(LLPointer<LLCredential> credential);
 
 	static void getFields(LLPointer<LLCredential>& credential, BOOL& remember);
 
-	static BOOL isGridComboDirty();
+
+//	static BOOL isGridComboDirty(); 
 	static BOOL areCredentialFieldsDirty();
 	static void setLocation(const LLSLURL& slurl);
 	
 	static void updateLocationCombo(bool force_visible);  // simply update the combo box
 	static void closePanel();
 
-	void setSiteIsAlive( bool alive );
+
+// 	void setSiteIsAlive( bool alive );
 
 	static void loadLoginPage();	
 	static void giveFocus();
 	static void setAlwaysRefresh(bool refresh); 
-	
+
 	// inherited from LLViewerMediaObserver
 	/*virtual*/ void handleMediaEvent(LLPluginClassMedia* self, EMediaEvent event);
 	static void updateServer();  // update the combo box, change the login page to the new server, clear the combo
@@ -92,15 +94,23 @@ private:
 	static void onClickVersion(void*);
 	static void onClickForgotPassword(void*);
 	static void onClickHelp(void*);
+	static void onClickDelete(void*);
+	static void onClickGrids(void*);
 	static void onPassKey(LLLineEditor* caller, void* user_data);
 	static void onSelectServer(LLUICtrl*, void*);
-	static void onServerComboLostFocus(LLFocusableElement*);
+	static void onSelectSavedLogin(LLUICtrl*, void*);
+	static void usernameLostFocus(LLFocusableElement* caller, void* userdata);
+//	static void onServerComboLostFocus(LLFocusableElement*);
 	static void updateServerCombo();
+	static void updateSavedLoginsCombo();
 	static void updateStartSLURL();
 	static void updateLoginPanelLinks();
-
+	
+	static std::string credential_name();
+	
 private:
 	LLPointer<LLUIImage> mLogoImage;
+	LLView* mLoginWidgets;
 	boost::scoped_ptr<LLPanelLoginListener> mListener;
 
 	void			(*mCallback)(S32 option, void *userdata);
@@ -110,6 +120,9 @@ private:
 
 	static LLPanelLogin* sInstance;
 	static BOOL		sCapslockDidNotification;
+	BOOL			mHtmlAvailable;
+	int mGridEntries;
+	std::string mLoginPage;
 };
 
 #endif

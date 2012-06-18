@@ -40,6 +40,7 @@
 #include "llcallingcard.h"
 #include "llcombobox.h"
 #include "llviewercontrol.h"
+#include "llviewernetwork.h"
 #include "llcommandhandler.h"
 #include "lldraghandle.h"
 //#include "llfirstuse.h"
@@ -72,6 +73,7 @@
 #include "llweb.h"
 #include "llsliderctrl.h"
 #include "message.h"
+#include "llworld.h"
 #include "llwindow.h"			// copyTextToClipboard()
 #include <algorithm>
 
@@ -139,10 +141,12 @@ public:
 		}
 		
 		// support the secondlife:///app/worldmap/{LOCATION}/{COORDS} SLapp
-		const std::string region_name = LLURI::unescape(params[0].asString());
-		S32 x = (params.size() > 1) ? params[1].asInteger() : 128;
-		S32 y = (params.size() > 2) ? params[2].asInteger() : 128;
-		S32 z = (params.size() > 3) ? params[3].asInteger() : 0;
+		LLSLURL dest(params, true);
+		const std::string region_name = dest.getRegion();
+		LLVector3 pos = dest.getPosition();
+		S32 x = pos[VX];
+		S32 y = pos[VY];
+		S32 z = pos[VZ];
 		
 		LLFloaterWorldMap::getInstance()->trackURL(region_name, x, y, z);
 		LLFloaterReg::showInstance("world_map", "center");
@@ -721,7 +725,7 @@ void LLFloaterWorldMap::updateTeleportCoordsDisplay( const LLVector3d& pos )
 	// convert global specified position to a local one
 	F32 region_local_x = (F32)fmod( pos.mdV[VX], (F64)REGION_WIDTH_METERS );
 	F32 region_local_y = (F32)fmod( pos.mdV[VY], (F64)REGION_WIDTH_METERS );
-	F32 region_local_z = (F32)llclamp( pos.mdV[VZ], 0.0, (F64)REGION_HEIGHT_METERS );
+	F32 region_local_z = (F32)llclamp( pos.mdV[VZ], 0.0, (F64)LLWorld::getInstance()->getRegionMaxHeight() );
 
 	// write in the values
 	childSetValue("teleport_coordinate_x", region_local_x );
@@ -775,6 +779,8 @@ void LLFloaterWorldMap::updateLocation()
 				
 				// Figure out where user is
 				// Set the current SLURL
+				LL_DEBUGS("SLURL")<< "Sim name: \""<< agent_sim_name 
+					<< "\" Position: \"" <<  gAgent.getPositionGlobal() << "\"" << LL_ENDL;
 				mSLURL = LLSLURL(agent_sim_name, gAgent.getPositionGlobal());
 			}
 		}
@@ -819,6 +825,8 @@ void LLFloaterWorldMap::updateLocation()
 // [/RLVa:KB]
 //		if ( gotSimName )
 		{
+			LL_DEBUGS("SLURL")<< "Sim name: \""<< sim_name 
+				<< "\" Position: \"" << pos_global  << "\"" << LL_ENDL;
 			mSLURL = LLSLURL(sim_name, pos_global);
 		}
 		else

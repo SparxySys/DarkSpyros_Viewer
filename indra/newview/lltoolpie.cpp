@@ -65,6 +65,7 @@
 #include "llviewermedia.h"
 #include "llvoavatarself.h"
 #include "llviewermediafocus.h"
+#include "llviewernetwork.h"
 #include "llworld.h"
 #include "llui.h"
 #include "llweb.h"
@@ -962,9 +963,11 @@ BOOL LLToolPie::handleTooltipLand(std::string line, std::string tooltip_msg)
 	
 	if (hover_parcel && hover_parcel->getParcelFlag(PF_FOR_SALE))
 	{
+		std::string type_currency = LLGridManager::getInstance()->getCurrency();
 		LLStringUtil::format_map_t args;
 		S32 price = hover_parcel->getSalePrice();
 		args["[AMOUNT]"] = LLResMgr::getInstance()->getMonetaryString(price);
+		args["[CUR]"] = type_currency;
 		line = LLTrans::getString("TooltipForSaleL$", args);
 		tooltip_msg.append(line);
 		tooltip_msg.push_back('\n');
@@ -1102,9 +1105,11 @@ BOOL LLToolPie::handleTooltipObject( LLViewerObject* hover_object, std::string l
 			bool for_sale = for_sale_selection(nodep);
 			if(for_sale)
 			{
+				std::string type_currency = LLGridManager::getInstance()->getCurrency();
 				LLStringUtil::format_map_t args;
 				S32 price = nodep->mSaleInfo.getSalePrice();
 				args["[AMOUNT]"] = LLResMgr::getInstance()->getMonetaryString(price);
+				args["[CUR]"] = type_currency;
 				tooltip_msg.append(LLTrans::getString("TooltipPrice", args) );
 			}
 

@@ -42,8 +42,45 @@
 						</array>
 					<key>tags</key>
 						<array>
-							<!-- sample entry for debugging a specific item	-->
-<!--						<string>Voice</string>		-->
+						
+						
+						<!-- OpenSim related-->
+						<string>OS_SETTINGS</string>
+						<string>GridManager</string>
+						<string>SLURL</string>
+						<string>UrlEntry</string>
+						<string>WebApi</string>
+						
+						
+						
+					<!-- Inventory -->
+						<!-- <string>InventoryFetch</string> -->
+						
+					<!-- Voice -->
+						<!--<string>Voice</string>-->
+						<!-- <string>VivoxProtocolParser</string> -->
+						<!--<string>InterfaceProtocolParser</string>-->
+						<!-- Wearable -->
+
+					<!--Shaders-->
+						<!--<string>Shaders</string>-->
+						<!--<string>WindLight</string>-->
+
+					<!-- see lltexturefetch -->
+						<!-- <string>HTTPGetResponder</string> -->
+						<!-- <string>TextureFetch</string> -->
+						<!-- <string>TextureFetchWorker</string> -->
+
+
+					<!-- Spammers -->
+						<!--Meminfo-->
+						<!-- <string>FrameWatcher</string> -->
+						<!-- <string>FastTimer</string> -->
+						<!--shader-->
+						<!-- <string>ShaderLoading</string> -->
+						<!--LLUI-->
+						<!-- <string>View</string> -->
+
 						</array>
 				</map>
 			</array>

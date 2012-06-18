@@ -106,6 +106,8 @@
 #include "llpluginclassmedia.h"
 #include "llteleporthistorystorage.h"
 #include "llproxy.h"
+#include "llviewernetwork.h"
+#include "lltexteditor.h"
 // [RLVa:KB] - Checked: 2010-03-18 (RLVa-1.2.0a)
 #include "rlvhandler.h"
 // [/RLVa:KB]
@@ -1724,6 +1726,12 @@ BOOL LLPanelPreference::postBuild()
 		mBandWidthUpdater = new LLPanelPreference::Updater(boost::bind(&handleBandwidthChanged, _1), BANDWIDTH_UPDATER_TIMEOUT);
 		gSavedSettings.getControl("ThrottleBandwidthKBPS")->getSignal()->connect(boost::bind(&LLPanelPreference::Updater::update, mBandWidthUpdater, _2));
 	}
+	
+	std::string type_currency = LLGridManager::getInstance()->getCurrency();
+	if (hasChild("notify_money_change_checkbox", TRUE))
+	{
+		getChild<LLCheckBoxCtrl>("notify_money_change_checkbox")->setLabelArg("[CUR]", type_currency);
+	}
 
 	apply();
 	return true;
@@ -2153,3 +2161,289 @@ void LLFloaterPreferenceProxy::onChangeSocksSettings()
 	}
 
 };
+
+static LLRegisterPanelClassWrapper<LLPanelPreferenceGrids> t_pref_grids("panel_preference_grids");
+
+LLPanelPreferenceGrids::LLPanelPreferenceGrids()
+	: LLPanelPreference(),
+	m_GridCombo(NULL),
+	mState(NORMAL)
+{
+}
+
+BOOL LLPanelPreferenceGrids::postBuild()
+{
+	m_GridCombo = getChild<LLComboBox>("grid_selector");
+	if (m_GridCombo)
+	{
+		m_GridCombo->setCommitCallback(boost::bind(&LLPanelPreferenceGrids::onSelectGrid, this));
+	}
+	getChild<LLUICtrl>("btn_delete")->setCommitCallback(boost::bind(&LLPanelPreferenceGrids::onClickDelete, this));
+	getChild<LLUICtrl>("btn_new")->setCommitCallback(boost::bind(&LLPanelPreferenceGrids::onClickNew, this));
+	getChild<LLUICtrl>("btn_copy")->setCommitCallback(boost::bind(&LLPanelPreferenceGrids::onClickCopy, this));
+	getChild<LLUICtrl>("btn_default")->setCommitCallback(boost::bind(&LLPanelPreferenceGrids::onClickDefault, this));
+	getChild<LLUICtrl>("btn_add")->setCommitCallback(boost::bind(&LLPanelPreferenceGrids::onClickAdd, this));
+	getChild<LLUICtrl>("btn_help_render_compat")->setCommitCallback(boost::bind(&LLPanelPreferenceGrids::onClickHelpRenderCompat, this));
+	getChild<LLUICtrl>("btn_advanced")->setCommitCallback(boost::bind(&LLPanelPreferenceGrids::onClickAdvanced, this));
+
+	reset();
+	return LLPanelPreference::postBuild();
+}
+
+void LLPanelPreferenceGrids::apply()
+{
+	if (saveCurGrid()) 
+	{
+		// adding new grid did not fail
+		LLGridManager::getInstance()->setGridChoice(mCurGrid);
+	}
+	LLPanelLogin::loadLoginPage();
+	LLGridManager::getInstance()->saveGridList();
+	refresh();
+}
+
+void LLPanelPreferenceGrids::cancel()
+{
+	reset();
+}
+
+void LLPanelPreferenceGrids::onClickDelete()
+{
+	if (mState == NORMAL)
+	{
+		LLGridManager::getInstance()->deleteGrid(mCurGrid);
+	}
+	reset();
+}
+
+void LLPanelPreferenceGrids::onClickNew()
+{
+	mState = ADD_NEW;
+	loadCurGrid();
+}
+
+void LLPanelPreferenceGrids::onClickCopy()
+{
+	if (mState == NORMAL) 
+	{
+		mState = ADD_COPY;
+		loadCurGrid();
+	}
+}
+
+void LLPanelPreferenceGrids::onClickDefault()
+{
+	if (mState == NORMAL) 
+	{
+		saveCurGrid();
+		LLGridManager::getInstance()->setGridChoice(mCurGrid);
+		refresh();
+	}
+}
+
+void LLPanelPreferenceGrids::onAddDoneCallback(std::string gridlabel)
+{
+	loadCurGrid();
+	if(!gridlabel.empty()) 
+	{
+		m_GridCombo->setSelectedByValue(gridlabel,TRUE);
+		onSelectGrid();
+	}
+}
+
+void LLPanelPreferenceGrids::onClickAdd()
+{
+	std::string loginuri = getChild<LLLineEditor>("loginuri",true)->getText();
+
+	mState = NORMAL;
+	getChild<LLButton>("btn_add", true)->setVisible(false);
+
+	if(loginuri != "<required>") 
+	{
+		GridEntry* grid_entry = new GridEntry;
+		grid_entry->grid = LLSD::emptyMap();
+		grid_entry->grid[GRID_VALUE] = loginuri;
+		grid_entry->set_current = false;
+		grid_entry->mOnDoneCallback = boost::bind(&LLPanelPreferenceGrids::onAddDoneCallback, this, _1);
+		LLGridManager::getInstance()->addGrid(grid_entry, LLGridManager::FETCH);
+	}
+	else 
+	{
+		loadCurGrid();
+	}
+}
+
+void LLPanelPreferenceGrids::onClickHelpRenderCompat()
+{
+}
+
+void LLPanelPreferenceGrids::onClickAdvanced()
+{
+	if(getChildView("loginpage_label")->getVisible())
+	{
+		getChildView("loginpage_label")->setVisible(false);
+		getChildView("loginpage")->setVisible(false);
+		getChildView("helperuri_label")->setVisible(false);
+		getChildView("helperuri")->setVisible(false);
+		getChildView("website_label")->setVisible(false);
+		getChildView("website")->setVisible(false);
+		getChildView("support_label")->setVisible(false);
+		getChildView("support")->setVisible(false);
+		getChildView("register_label")->setVisible(false);
+		getChildView("register")->setVisible(false);
+		getChildView("password_label")->setVisible(false);
+		getChildView("password")->setVisible(false);
+		getChildView("search_label")->setVisible(false);
+		getChildView("search")->setVisible(false);
+	}
+	else
+	{
+		getChildView("loginpage_label")->setVisible(true);
+		getChildView("loginpage")->setVisible(true);
+		getChildView("helperuri_label")->setVisible(true);
+		getChildView("helperuri")->setVisible(true);
+		getChildView("website_label")->setVisible(true);
+		getChildView("website")->setVisible(true);
+		getChildView("support_label")->setVisible(true);
+		getChildView("support")->setVisible(true);
+		getChildView("register_label")->setVisible(true);
+		getChildView("register")->setVisible(true);
+		getChildView("password_label")->setVisible(true);
+		getChildView("password")->setVisible(true);
+		getChildView("search_label")->setVisible(true);
+		getChildView("search")->setVisible(true);
+	}
+}
+
+void LLPanelPreferenceGrids::onSelectGrid()
+{
+	std::string newGrid = m_GridCombo->getSelectedItemLabel();
+
+	if (!saveCurGrid()) 
+	{
+		m_GridCombo->setCurrentByIndex(m_GridCombo->getItemCount() - 1);
+		return;
+	}
+
+	mCurGrid = LLGridManager::getInstance()->getGridByLabel(newGrid);
+
+	if(mState != NORMAL) mState = NORMAL;
+	loadCurGrid();
+}
+
+void LLPanelPreferenceGrids::loadCurGrid()
+{
+	LLSD grid_info;
+	LLGridManager::getInstance()->getGridData(mCurGrid, grid_info);
+	
+	if (mState != ADD_NEW) 
+	{
+		getChild<LLLineEditor>("gridname", true)->setText(grid_info[GRID_LABEL_VALUE].asString());
+		getChild<LLLineEditor>("loginuri",true)->setText(grid_info[GRID_LOGIN_URI_VALUE][0].asString());
+		getChild<LLLineEditor>("loginpage",true)->setText(grid_info[GRID_LOGIN_PAGE_VALUE].asString());
+		getChild<LLLineEditor>("helperuri",true)->setText(grid_info[GRID_HELPER_URI_VALUE].asString());
+		getChild<LLLineEditor>("website",true)->setText(grid_info["about"].asString());
+		getChild<LLLineEditor>("support",true)->setText(grid_info["help"].asString());
+		getChild<LLLineEditor>("register",true)->setText(grid_info[GRID_REGISTER_NEW_ACCOUNT].asString());
+		getChild<LLLineEditor>("password",true)->setText(grid_info[GRID_FORGOT_PASSWORD].asString());
+		getChild<LLLineEditor>("search",true)->setText(grid_info["search"].asString());
+	    getChild<LLTextEditor>("gridmessage",true)->setText(grid_info["message"].asString());
+		getChild<LLButton>("btn_add", true)->setVisible(false);
+	} 
+	else 
+	{
+		std::string empty = "";
+		getChild<LLLineEditor>("gridname",true)->setText(empty);
+		getChild<LLLineEditor>("loginuri",true)->setText(empty);
+		getChild<LLLineEditor>("loginpage",true)->setText(empty);
+		getChild<LLLineEditor>("helperuri",true)->setText(empty);
+		getChild<LLLineEditor>("website",true)->setText(empty);
+		getChild<LLLineEditor>("support",true)->setText(empty);
+		getChild<LLLineEditor>("register",true)->setText(empty);
+		getChild<LLLineEditor>("password",true)->setText(empty);
+		getChild<LLLineEditor>("search",true)->setText(empty);
+		getChild<LLTextEditor>("gridmessage",true)->setText(empty);
+	}
+
+	if (mState == ADD_NEW) 
+	{
+		std::string required = "<required>";
+		getChild<LLButton>("btn_add", true)->setVisible(true);
+		getChild<LLLineEditor>("loginuri",true)->setText(required);
+	} 
+	else if (mState == ADD_COPY) 
+	{
+		getChild<LLLineEditor>("gridname",true)->setText(std::string("<required>"));
+	} 
+	else if (mState != NORMAL) 
+	{
+		llwarns << "Illegal state " << mState << '.' << llendl;
+	}
+	
+	refresh();
+}
+
+bool LLPanelPreferenceGrids::saveCurGrid()
+{
+	LLGridManager::getInstance()->saveGridList();
+	refresh();
+	return true;
+}
+
+void LLPanelPreferenceGrids::refresh()
+{
+	const std::string &defaultGrid = LLGridManager::getInstance()->getGridLabel();
+
+	S32 selectIndex = -1, i = 0;
+	m_GridCombo->removeall();
+	if (defaultGrid != "") 
+	{
+		m_GridCombo->add(defaultGrid);
+		selectIndex = i++;
+	}
+
+	std::map<std::string, std::string> known_grids = LLGridManager::getInstance()->getKnownGrids(!gSavedSettings.getBOOL("ShowBetaGrids"));
+	for (std::map<std::string, std::string>::iterator grid_choice = known_grids.begin();
+		 grid_choice != known_grids.end();
+		 grid_choice++)
+	{
+		const std::string &grid = grid_choice->second;
+		if (!grid.empty() && grid != defaultGrid)
+		{
+			m_GridCombo->add(grid);
+			if (LLGridManager::getInstance()->getGridByLabel(grid) == mCurGrid) selectIndex = i;
+			i++;
+		}
+	}
+
+	if ((mState == ADD_NEW) || (mState == ADD_COPY)) 
+	{
+		m_GridCombo->add("<new>");
+		selectIndex = i++;
+	}
+	if (selectIndex >= 0) 
+	{
+		m_GridCombo->setCurrentByIndex(selectIndex);
+	} 
+	else 
+	{
+		m_GridCombo->setLabel(LLStringExplicit(""));  // LLComboBox::removeall() does not clear the label
+	}
+
+	getChild<LLTextBase>("default_grid", true)->setTextArg("[DEFAULT]", (defaultGrid != "")? defaultGrid: " ");
+
+	getChild<LLButton>("btn_delete", true)->setEnabled((selectIndex >= 0));
+	getChild<LLButton>("btn_copy", true)->setEnabled((mState == NORMAL) && (selectIndex >= 0));
+	getChild<LLButton>("btn_default", true)->setEnabled((mState == NORMAL) && (selectIndex > 0));
+	getChild<LLLineEditor>("gridname", true)->setEnabled((mState == ADD_NEW) || (mState == ADD_COPY));
+	
+	LLPanelLogin::updateServer();
+
+}
+
+void LLPanelPreferenceGrids::reset()
+{
+	mState = NORMAL;
+	mCurGrid = LLGridManager::getInstance()->getGrid();
+	loadCurGrid();
+}

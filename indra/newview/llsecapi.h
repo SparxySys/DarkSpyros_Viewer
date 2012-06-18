@@ -470,6 +470,8 @@ public:
 	
 	virtual LLPointer<LLCredential> loadCredential(const std::string& grid)=0;
 	
+	virtual std::vector<std::string> listCredentials()=0;
+	
 	virtual void saveCredential(LLPointer<LLCredential> cred, bool save_authenticator)=0;
 	
 	virtual void deleteCredential(LLPointer<LLCredential> cred)=0;

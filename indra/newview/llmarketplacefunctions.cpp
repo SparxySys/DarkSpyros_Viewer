@@ -45,9 +45,9 @@ static std::string getMarketplaceDomain()
 {
 	std::string domain = "secondlife.com";
 	
-	if (!LLGridManager::getInstance()->isInProductionGrid())
+	if (!LLGridManager::getInstance()->isInSLBeta())
 	{
-		const std::string& grid_label = LLGridManager::getInstance()->getGridLabel();
+		const std::string& grid_label = LLGridManager::getInstance()->getGridNick();
 		const std::string& grid_label_lower = utf8str_tolower(grid_label);
 		
 		if (grid_label_lower == "damballah")
@@ -115,7 +115,7 @@ namespace LLMarketplaceImport
 	static bool sImportGetPending = false;
 	static U32 sImportResultStatus = 0;
 	static LLSD sImportResults = LLSD::emptyMap();
-
+	
 	static LLTimer slmGetTimer;
 	static LLTimer slmPostTimer;
 
@@ -129,13 +129,13 @@ namespace LLMarketplaceImport
 		void completed(U32 status, const std::string& reason, const LLSD& content)
 		{
 			slmPostTimer.stop();
-
+			
 			if (gSavedSettings.getBOOL("InventoryOutboxLogging"))
 			{
 				llinfos << " SLM POST status: " << status << llendl;
 				llinfos << " SLM POST reason: " << reason << llendl;
 				llinfos << " SLM POST content: " << content.asString() << llendl;
-
+			
 				llinfos << " SLM POST timer: " << slmPostTimer.getElapsedTimeF32() << llendl;
 			}
 
@@ -176,13 +176,13 @@ namespace LLMarketplaceImport
 		void completed(U32 status, const std::string& reason, const LLSD& content)
 		{
 			slmGetTimer.stop();
-
+			
 			if (gSavedSettings.getBOOL("InventoryOutboxLogging"))
 			{
 				llinfos << " SLM GET status: " << status << llendl;
 				llinfos << " SLM GET reason: " << reason << llendl;
 				llinfos << " SLM GET content: " << content.asString() << llendl;
-
+			
 				llinfos << " SLM GET timer: " << slmGetTimer.getElapsedTimeF32() << llendl;
 			}
 			
@@ -324,7 +324,7 @@ namespace LLMarketplaceImport
 			llinfos << " SLM POST: " << url << llendl;
 		}
 
-		slmPostTimer.start();
+		slmGetTimer.start();
 		LLHTTPClient::post(url, LLSD(), new LLImportPostResponder(), headers);
 		
 		return true;

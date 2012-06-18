@@ -53,6 +53,7 @@
 #include "llviewermenu.h"
 #include "llviewertexturelist.h"
 #include "llsidepanelinventory.h"
+#include "llviewernetwork.h"
 
 const std::string FILTERS_FILENAME("filters.xml");
 
@@ -194,6 +195,12 @@ BOOL LLPanelMainInventory::postBuild()
 	mMenuAdd->getChild<LLMenuItemGL>("Upload Animation")->setLabelArg("[COST]", upload_cost);
 	mMenuAdd->getChild<LLMenuItemGL>("Bulk Upload")->setLabelArg("[COST]", upload_cost);
 
+	std::string type_currency = LLGridManager::getInstance()->getCurrency();
+	mMenuAdd->getChild<LLMenuItemGL>("Upload Image")->setLabelArg("[CUR]", type_currency);
+	mMenuAdd->getChild<LLMenuItemGL>("Upload Sound")->setLabelArg("[CUR]", type_currency);
+	mMenuAdd->getChild<LLMenuItemGL>("Upload Animation")->setLabelArg("[CUR]", type_currency);
+	mMenuAdd->getChild<LLMenuItemGL>("Bulk Upload")->setLabelArg("[CUR]", type_currency);
+	
 	// Trigger callback for focus received so we can deselect items in inbox/outbox
 	LLFocusableElement::setFocusReceivedCallback(boost::bind(&LLPanelMainInventory::onFocusReceived, this));
 
@@ -1254,6 +1261,12 @@ void LLPanelMainInventory::setUploadCostIfNeeded()
 			upload_menu->getChild<LLView>("Upload Sound")->setLabelArg("[COST]", cost_str);
 			upload_menu->getChild<LLView>("Upload Animation")->setLabelArg("[COST]", cost_str);
 			upload_menu->getChild<LLView>("Bulk Upload")->setLabelArg("[COST]", cost_str);
+			
+			std::string type_currency = LLGridManager::getInstance()->getCurrency();
+			upload_menu->getChild<LLView>("Upload Image")->setLabelArg("[CUR]", type_currency);
+			upload_menu->getChild<LLView>("Upload Sound")->setLabelArg("[CUR]", type_currency);
+			upload_menu->getChild<LLView>("Upload Animation")->setLabelArg("[CUR]", type_currency);
+			upload_menu->getChild<LLView>("Bulk Upload")->setLabelArg("[CUR]", type_currency);
 		}
 	}
 }

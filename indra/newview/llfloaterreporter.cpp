@@ -179,7 +179,8 @@ BOOL LLFloaterReporter::postBuild()
 	// grab the user's name
 	std::string reporter = LLSLURL("agent", gAgent.getID(), "inspect").getSLURLString();
 	getChild<LLUICtrl>("reporter_field")->setValue(reporter);
-	
+	std::string type_currency = LLGridManager::getInstance()->getCurrency();
+	getChild<LLUICtrl>("Fraud__L$")->setLabelArg("[CUR]", type_currency);
 	center();
 
 	return TRUE;
@@ -567,7 +568,7 @@ LLSD LLFloaterReporter::gatherReport()
 	mCopyrightWarningSeen = FALSE;
 
 	std::ostringstream summary;
-	if (!LLGridManager::getInstance()->isInProductionGrid())
+	if (LLGridManager::getInstance()->isInSLBeta())
 	{
 		summary << "Preview ";
 	}

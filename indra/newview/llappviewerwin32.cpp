@@ -74,7 +74,7 @@ extern "C" {
 #endif
 #endif
 
-const std::string LLAppViewerWin32::sWindowClass = "Second Life";
+const std::string LLAppViewerWin32::sWindowClass = "Zen Viewer";
 
 // Create app mutex creates a unique global windows object. 
 // If the object can be created it returns true, otherwise
@@ -456,6 +456,7 @@ bool LLAppViewerWin32::initHardwareTest()
 		std::string splash_msg;
 		LLStringUtil::format_map_t args;
 		args["[APP_NAME]"] = LLAppViewer::instance()->getSecondLifeTitle();
+		args["[CURRENT_GRID]"] = LLGridManager::getInstance()->getGridLabel();
 		splash_msg = LLTrans::getString("StartupLoading", args);
 
 		LLSplashScreen::update(splash_msg);

@@ -35,6 +35,7 @@ include(LScript)
 include(Linking)
 include(NDOF)
 include(GooglePerfTools)
+include(Teapot)
 include(TemplateCheck)
 include(UI)
 include(UnixInstall)
@@ -70,6 +71,7 @@ include_directories(
     ${LSCRIPT_INCLUDE_DIRS}
     ${LSCRIPT_INCLUDE_DIRS}/lscript_compile
     ${LLLOGIN_INCLUDE_DIRS}
+	${TEAPOT_INCLUDE_DIRS}
     ${UPDATER_INCLUDE_DIRS}
     ${LIBS_PREBUILT_DIR}/include/collada
     ${OPENAL_LIB_INCLUDE_DIRS}
@@ -86,6 +88,7 @@ set(viewer_SOURCE_FILES
     fspanelclassified.cpp
     fspanelprofile.cpp
     fspanelprofileclassifieds.cpp
+	floaterhop.cpp
 	fsareasearch.cpp
 	groupchatlistener.cpp
     llaccountingcostmanager.cpp
@@ -661,6 +664,7 @@ set(viewer_HEADER_FILES
     fspanelclassified.h
     fspanelprofile.h
     fspanelprofileclassifieds.h
+	floaterhop.h
 	fsareasearch.h
 	groupchatlistener.h
     llaccountingcostmanager.h
@@ -1457,6 +1461,7 @@ set(viewer_APPSETTINGS_FILES
     app_settings/logcontrol.xml
     app_settings/low_graphics.xml
     app_settings/mid_graphics.xml
+	app_settings/grids.fallback.xml
     app_settings/settings.xml
     app_settings/settings_crash_behavior.xml
     app_settings/settings_files.xml
@@ -1791,6 +1796,7 @@ target_link_libraries(${VIEWER_BINARY_NAME}
     ${LSCRIPT_LIBRARIES}
     ${LLMATH_LIBRARIES}
     ${LLCOMMON_LIBRARIES}
+	${TEAPOT_LIBRARIES}
     ${NDOF_LIBRARY}
     ${viewer_LIBRARIES}
     ${BOOST_PROGRAM_OPTIONS_LIBRARY}
@@ -2103,10 +2109,10 @@ if (LL_TESTS)
     "${test_libs}"
     )
 
-  LL_ADD_INTEGRATION_TEST(llviewernetwork
-     llviewernetwork.cpp
-    "${test_libs}"
-    )
+ # LL_ADD_INTEGRATION_TEST(llviewernetwork
+ #    llviewernetwork.cpp
+ #   "${test_libs}"
+ #   )
 
   LL_ADD_INTEGRATION_TEST(llsimplestat
     ""

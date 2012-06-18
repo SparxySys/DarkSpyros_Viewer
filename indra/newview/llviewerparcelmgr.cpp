@@ -68,6 +68,7 @@
 #include "roles_constants.h"
 #include "llweb.h"
 #include "llvieweraudio.h"
+#include "llviewernetwork.h"
 
 const F32 PARCEL_COLLISION_DRAW_SECS = 1.f;
 
@@ -2142,8 +2143,10 @@ void LLViewerParcelMgr::startReleaseLand()
 	}
 
 	// Compute claim price
+	std::string type_currency = LLGridManager::getInstance()->getCurrency();
 	LLSD args;
 	args["AREA"] = llformat("%d",mCurrentParcel->getArea());
+	args["CUR"] = type_currency;
 	LLNotificationsUtil::add("ReleaseLandWarning", args, LLSD(), releaseAlertCB);
 }
 

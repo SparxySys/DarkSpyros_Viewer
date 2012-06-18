@@ -410,5 +410,14 @@
       <key>map-to</key>
       <string>DisableCrashLogger</string>
     </map>
+	<key>isrelogsession</key>
+    <map>
+      <key>desc</key>
+      <string>*THIS IS UNDER DEVELOPENT AND WILL CHANGE WITHOUT NOTICE* The session is started from another instance as a quasi relog.</string>
+      <key>count</key>
+      <integer>1</integer>
+	  <key>map-to</key>
+      <string>IsRelogSession</string>
+    </map>
   </map>
 </llsd>

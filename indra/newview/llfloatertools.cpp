@@ -89,6 +89,8 @@
 #include "lluictrlfactory.h"
 #include "llmeshrepository.h"
 #include "qtoolalign.h"
+#include "llviewernetwork.h"
+#include "llspinctrl.h"
 
 // Globals
 LLFloaterTools *gFloaterTools = NULL;
@@ -310,6 +312,15 @@ BOOL	LLFloaterTools::postBuild()
 	mStatusText["selectland"] = getString("status_selectland");
 
 	sShowObjectCost = gSavedSettings.getBOOL("ShowObjectRenderingCost");
+	
+	std::string type_currency = LLGridManager::getInstance()->getCurrency();
+	std::string type_currency_label = "Price: " + type_currency;
+	
+	//getChild<LLSpinCtrl>("Edit Cost")->setLabelArg("[CUR]", type_currency); //setLabelArg is not inplemented properly in spinners
+	getChild<LLSpinCtrl>("Edit Cost")->setLabel(type_currency_label);
+	getChild<LLUICtrl>("Cost Default")->setTextArg("[CUR]", type_currency);
+	getChild<LLUICtrl>("Cost Total")->setTextArg("[CUR]", type_currency);
+	getChild<LLUICtrl>("Cost Per Unit")->setTextArg("[CUR]", type_currency);
 	
 	return TRUE;
 }

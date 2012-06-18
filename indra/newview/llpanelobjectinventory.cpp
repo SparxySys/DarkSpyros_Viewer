@@ -65,6 +65,7 @@
 #include "llviewerregion.h"
 #include "llviewerobjectlist.h"
 #include "llviewermessage.h"
+#include "llviewernetwork.h"
 // [RLVa:KB] - Checked: 2011-05-22 (RLVa-1.3.1a)
 #include "rlvhandler.h"
 #include "rlvlocks.h"
@@ -222,9 +223,11 @@ void LLTaskInvFVBridge::buyItem()
 	}
 	else
 	{
-        LLSD args;
+        std::string type_currency = LLGridManager::getInstance()->getCurrency();
+		LLSD args;
         args["PRICE"] = llformat("%d",sale_info.getSalePrice());
         args["OWNER"] = owner_name;
+		args["CUR"] = type_currency;
         if (sale_info.getSaleType() != LLSaleInfo::FS_CONTENTS)
         {
         	U32 next_owner_mask = perm.getMaskNextOwner();
@@ -663,8 +666,10 @@ void LLTaskInvFVBridge::performAction(LLInventoryModel* model, std::string actio
 		{
 			if (price > 0 && price > gStatusBar->getBalance())
 			{
+				std::string type_currency = LLGridManager::getInstance()->getCurrency();
 				LLStringUtil::format_map_t args;
 				args["AMOUNT"] = llformat("%d", price);
+				args["CUR"] = type_currency;
 				LLBuyCurrencyHTML::openCurrencyFloater( LLTrans::getString("this_costs", args), price );
 			}
 			else
@@ -710,8 +715,11 @@ void LLTaskInvFVBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 		}
 		else
 		{
+			std::string type_currency = LLGridManager::getInstance()->getCurrency();
+			LLSD args;
+			args["CUR"] = type_currency;
 			std::ostringstream info;
-			info << LLTrans::getString("BuyforL$") << price;
+			info << LLTrans::getString("BuyforL$",args) << price;
 			label.assign(info.str());
 		}
 
@@ -1055,8 +1063,11 @@ void LLTaskSoundBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 		}
 		else
 		{
+			std::string type_currency = LLGridManager::getInstance()->getCurrency();
+			LLSD args;
+			args["CUR"] = type_currency;
 			std::ostringstream info;
-			info <<  LLTrans::getString("BuyforL$") << price;
+			info <<  LLTrans::getString("BuyforL$",args) << price;
 			label.assign(info.str());
 		}
 
@@ -1427,8 +1438,11 @@ void LLTaskMeshBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 		}
 		else
 		{
+			std::string type_currency = LLGridManager::getInstance()->getCurrency();
+			LLSD args;
+			args["CUR"] = type_currency;
 			std::ostringstream info;
-			info <<  LLTrans::getString("BuyforL$") << price;
+			info <<  LLTrans::getString("BuyforL$",args) << price;
 			label.assign(info.str());
 		}
 

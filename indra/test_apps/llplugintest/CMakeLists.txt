@@ -457,7 +457,7 @@ if(WINDOWS)
     qtnetwork4.dll
     qtopengl4.dll
     qtwebkit4.dll
-    qtxmlpatterns4.dll
+    qtxml4.dll
     ssleay32.dll
     )
   copy_if_different(

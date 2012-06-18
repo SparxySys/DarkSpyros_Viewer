@@ -1,0 +1,10 @@
+--- llviewermenu.cpp
++++ llviewermenu.cpp
+@@ -123,6 +123,7 @@
+ #include "lltexturecache.h"
+ #include "particleeditor.h"
+ #include "boost/unordered_map.hpp"
++#include "llviewernetwork.h"
+ 
+ using namespace LLVOAvatarDefines;
+ 

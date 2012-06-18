@@ -57,6 +57,7 @@
 #include "lluiconstants.h"
 #include "llstring.h"
 #include "llviewercontrol.h"
+#include "llviewernetwork.h"
 // [RLVa:KB] - Checked: 2010-04-22 (RLVa-1.2.0f)
 #include "rlvcommon.h"
 // [/RLVa:KB]
@@ -281,7 +282,7 @@ public:
 		if (chat.mFromName.empty()
 			|| mSourceType == CHAT_SOURCE_SYSTEM)
 		{
-			mFrom = LLTrans::getString("SECOND_LIFE");
+			mFrom = LLGridManager::getInstance()->getGridLabel();
 			user_name->setValue(mFrom);
 			updateMinUserNameWidth();
 		}

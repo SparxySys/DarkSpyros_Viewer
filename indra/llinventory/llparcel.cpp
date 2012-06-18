@@ -303,12 +303,6 @@ void LLParcel::setMediaType(const std::string& type)
 	// abstraction layer.
 	mMediaType = type;
 	mMediaType = rawstr_to_utf8(mMediaType);
-
-	// This code attempts to preserve legacy movie functioning
-	if(mMediaType.empty() && ! mMediaURL.empty())
-	{
-		setMediaType(std::string("video/vnd.secondlife.qt.legacy"));
-	}
 }
 void LLParcel::setMediaWidth(S32 width)
 {
@@ -779,7 +773,7 @@ void LLParcel::unpackMessage(LLMessageSystem* msg)
 	}
 	else
 	{
-		setMediaType(std::string("video/vnd.secondlife.qt.legacy"));
+		setMediaType(std::string(""));
 		setMediaDesc(std::string("No Description available without Server Upgrade"));
 		mMediaLoop = true;
 	}

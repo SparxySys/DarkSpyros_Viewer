@@ -54,6 +54,7 @@
 #include "llstatusbar.h"
 #include "llfloaterworldmap.h"
 #include "llviewermessage.h"
+#include "llviewernetwork.h"
 
 static LLRegisterPanelClassWrapper<LLPanelGroupLandMoney> t_panel_group_money("panel_group_land_money");
 
@@ -803,6 +804,8 @@ BOOL LLPanelGroupLandMoney::postBuild()
 												 loading_text);
 	}
 
+	std::string type_currency = LLGridManager::getInstance()->getCurrency();
+	getChild<LLUICtrl>("group_money_heading")->setTextArg("[CUR]", type_currency);
 	return LLPanelGroupTab::postBuild();
 }
 
@@ -1445,9 +1448,10 @@ void LLGroupMoneyPlanningTabEventHandler::processReply(LLMessageSystem* msg,
 		substitution["datetime"] = LLDateUtil::secondsSinceEpochFromString("%Y-%m-%d", next_stipend_date);
 		LLStringUtil::format (time_str, substitution);
 
+		std::string type_currency = LLGridManager::getInstance()->getCurrency();
 		text.append(time_str);
 		text.append(".\n\n");
-		text.append(llformat("%-23sL$%6d\n", LLTrans::getString("GroupMoneyBalance").c_str(), balance ));
+		text.append(llformat("%-23s%s%6d\n", LLTrans::getString("GroupMoneyBalance").c_str(), type_currency.c_str(), balance ));
 		text.append(1, '\n');
 	}
 

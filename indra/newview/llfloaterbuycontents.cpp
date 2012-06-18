@@ -51,6 +51,7 @@
 #include "llviewerregion.h"
 #include "lluictrlfactory.h"
 #include "llviewerwindow.h"
+#include "llviewernetwork.h"
 
 LLFloaterBuyContents::LLFloaterBuyContents(const LLSD& key)
 :	LLFloater(key)
@@ -126,7 +127,8 @@ void LLFloaterBuyContents::show(const LLSaleInfo& sale_info)
 	floater->getChild<LLUICtrl>("contains_text")->setTextArg("[NAME]", node->mName);
 	floater->getChild<LLUICtrl>("buy_text")->setTextArg("[AMOUNT]", llformat("%d", sale_info.getSalePrice()));
 	floater->getChild<LLUICtrl>("buy_text")->setTextArg("[NAME]", owner_name);
-
+	std::string type_currency = LLGridManager::getInstance()->getCurrency();
+	floater->getChild<LLUICtrl>("buy_text")->setTextArg("[CUR]", type_currency);
 	// Must do this after the floater is created, because
 	// sometimes the inventory is already there and 
 	// the callback is called immediately.

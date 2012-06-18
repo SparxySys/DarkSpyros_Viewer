@@ -1283,6 +1283,11 @@ void LLViewerMedia::loadCookieFile()
 
 	if (resolved_filename.empty())
 	{
+		resolved_filename = gDirUtilp->getExpandedFilename( LL_PATH_USER_SETTINGS, PLUGIN_COOKIE_FILE_NAME );
+	}
+	
+	if (resolved_filename.empty())
+	{
 		llinfos << "can't get path to plugin cookie file - probably not logged in yet." << llendl;
 		return;
 	}
@@ -1323,6 +1328,11 @@ void LLViewerMedia::saveCookieFile()
 	// build filename for each user
 	std::string resolved_filename = gDirUtilp->getExpandedFilename(LL_PATH_PER_SL_ACCOUNT, PLUGIN_COOKIE_FILE_NAME);
 
+	if (resolved_filename.empty())
+	{
+		resolved_filename = gDirUtilp->getExpandedFilename( LL_PATH_USER_SETTINGS, PLUGIN_COOKIE_FILE_NAME );
+	}
+	
 	if (resolved_filename.empty())
 	{
 		llinfos << "can't get path to plugin cookie file - probably not logged in yet." << llendl;
@@ -1836,7 +1846,16 @@ LLPluginClassMedia* LLViewerMediaImpl::newSourceFromMediaType(std::string media_
 			// gDirUtilp->getLindenUserDir() is whole path, not just Linden name
 			user_data_path = linden_user_dir;
 			user_data_path += gDirUtilp->getDirDelimiter();
-		};
+		}
+		else
+		{
+			std::string user_dir = gDirUtilp->getExpandedFilename( LL_PATH_USER_SETTINGS, "" );
+			if(!user_dir.empty())
+			{
+				user_data_path = user_dir;
+				user_data_path += gDirUtilp->getDirDelimiter();
+			}
+		}
 
 		// See if the plugin executable exists
 		llstat s;

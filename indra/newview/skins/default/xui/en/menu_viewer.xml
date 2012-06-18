@@ -147,10 +147,13 @@
       <menu_item_separator/>
 
       <menu_item_call
-         label="Buy L$..."
+         label="Buy [CUR]..."
          name="Buy and Sell L$">
         <menu_item_call.on_click
          function="BuyCurrency" />
+		<menu_item_call.on_visible
+         function="Currency.TypeCheck"
+         parameter="Buy and Sell L$" />
       </menu_item_call>
       <menu_item_call
          label="Merchant Outbox..."
@@ -1142,7 +1145,7 @@
          name="Upload"
          tear_off="true">
             <menu_item_call
-             label="Image (L$[COST])..."
+             label="Image ([CUR][COST])..."
              layout="topleft"
              name="Upload Image"
              shortcut="control|U">
@@ -1156,7 +1159,7 @@
                  parameter="Upload Image" />
             </menu_item_call>
             <menu_item_call
-             label="Sound (L$[COST])..."
+             label="Sound ([CUR][COST])..."
              layout="topleft"
              name="Upload Sound">
                 <menu_item_call.on_click
@@ -1169,7 +1172,7 @@
                  parameter="Upload Sound" />
             </menu_item_call>
             <menu_item_call
-             label="Animation (L$[COST])..."
+             label="Animation ([CUR][COST])..."
              layout="topleft"
              name="Upload Animation">
                 <menu_item_call.on_click
@@ -1194,12 +1197,17 @@
             function="File.VisibleUploadModel"/>
             </menu_item_call>
 	   <menu_item_call
-             label="Bulk (L$[COST] per file)..."
+             label="Bulk ([CUR][COST] per file) upload..."
              layout="topleft"
              name="Bulk Upload">
                 <menu_item_call.on_click
                  function="File.UploadBulk"
                  parameter="" />
+				 <menu_item_call.on_enable
+                 function="File.EnableUpload" />
+                <menu_item_call.on_visible
+                 function="Upload.CalculateCosts"
+                 parameter="Bulk Upload" />
             </menu_item_call>
 			<menu_item_call
               label="Import Objects"
@@ -1258,24 +1266,23 @@
              parameter="" />
         </menu_item_call>
         <menu_item_call
-         label="[SECOND_LIFE] Help"
-         name="Second Life Help"
-         shortcut="F1">
-            <menu_item_call.on_click
-             function="ShowHelp"
-             parameter="f1_help" />
-        </menu_item_call>
-<!--        <menu_item_call
-         label="Tutorial"
-         name="Tutorial">
-            <menu_item_call.on_click
-             function="Floater.Show"
-             parameter="hud" />
-        </menu_item_call>-->
-
-        <menu_item_separator/>
-
+		 label="[CURRENT_GRID] Help"
+		 name="current_grid_help">
+			<menu_item_call.on_click
+			 function="ShowHelp"
+			 parameter="grid_help" />
+		</menu_item_call>
         <menu_item_call
+		 label="About [CURRENT_GRID]"
+		 name="current_grid_about">
+			<menu_item_call.on_click
+			 function="ShowHelp"
+			 parameter="grid_about" />
+		</menu_item_call>
+		
+		<menu_item_separator/>
+		
+		<menu_item_call
              label="Report Abuse"
              name="Report Abuse">
                 <menu_item_call.on_click

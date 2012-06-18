@@ -27,15 +27,35 @@
 
 #ifndef LL_LLVIEWERNETWORK_H
 #define LL_LLVIEWERNETWORK_H
+
+#include "llxmlnode.h"
                                                                                                        
 extern const char* DEFAULT_LOGIN_PAGE;
+
+#define KNOWN_GRIDS_SIZE 3
+#define AGNI "Second Life"
+#define ADITI "Second Life Beta"
       
 #define GRID_VALUE "name"
-#define GRID_LABEL_VALUE "label"
 #define GRID_ID_VALUE "grid_login_id"
-#define GRID_LOGIN_URI_VALUE "login_uri"
-#define GRID_HELPER_URI_VALUE "helper_uri"
-#define GRID_LOGIN_PAGE_VALUE "login_page"
+#define GRID_LABEL_VALUE "gridname"
+#define GRID_NICK_VALUE "gridnick"
+#define GRID_LOGIN_URI_VALUE "loginuri"
+#define GRID_HELPER_URI_VALUE "helperuri"
+#define GRID_LOGIN_PAGE_VALUE "loginpage"
+#define GRID_IS_FAVORITE_VALUE "favorite"
+#define GRID_REGISTER_NEW_ACCOUNT "register"
+#define GRID_FORGOT_PASSWORD "password"
+#define GRID_HELP "help"
+#define GRID_ABOUT "about"
+#define GRID_SEARCH	"search"
+#define GRID_SENDGRIDINFO "SendGridInfoToViewerOnLogin"
+#define GRID_DIRECTORY_FEE "DirectoryFee"
+#define GRID_CURRENCY_SYMBOL "CurrencySymbol"
+#define GRID_REAL_CURRENCY_SYMBOL "RealCurrencySymbol"
+#define GRID_MAXGROUPS "MaxGroups"
+#define GRID_PLATFORM "platform"
+#define GRID_MESSAGE "message"
 #define GRID_IS_SYSTEM_GRID_VALUE "system_grid"
 #define GRID_IS_FAVORITE_VALUE "favorite"
 #define MAINGRID "util.agni.lindenlab.com"
@@ -46,6 +66,15 @@ extern const char* DEFAULT_LOGIN_PAGE;
 // forms.
 #define GRID_SLURL_BASE "slurl_base"
 #define GRID_APP_SLURL_BASE "app_slurl_base"
+
+struct GridEntry
+{
+	LLSD grid;
+	LLXMLNodePtr info_root;
+	bool set_current;
+	std::string last_http_error;
+	boost::function<void(std::string)> mOnDoneCallback;
+};
 
 class LLInvalidGridName
 {
@@ -67,24 +96,48 @@ protected:
 class LLGridManager : public LLSingleton<LLGridManager>
 {
 public:
+
+	typedef enum 
+	{
+		FETCH,
+		FETCHTEMP,
+		SYSTEM,
+		RETRY,
+		LOCAL,
+		FINISH,
+		TRYLEGACY,
+		FAIL
+	} AddState;
+public:
 	
 	// when the grid manager is instantiated, the default grids are automatically
 	// loaded, and the grids favorites list is loaded from the xml file.
-	LLGridManager(const std::string& grid_file);
 	LLGridManager();
 	~LLGridManager();
 	
-	void initialize(const std::string& grid_file);
+	void initGrids();
+	void initSystemGrids();
+	void initGridList(std::string grid_file, AddState state);
+	void initCmdLineGrids();
+
 	// grid list management
+	bool isReadyToLogin(){return mReadyToLogin;}
+	void incResponderCount(){++mResponderCount;}
+	void decResponderCount(){--mResponderCount;}
+	void gridInfoResponderCB(GridEntry* grid_data);
 	
 	// add a grid to the list of grids
-	void addGrid(LLSD& grid_info);	
+	void addGrid(GridEntry* grid_info, AddState state);
+	void deleteGrid(const std::string& grid);	
 
 	// retrieve a map of grid-name <-> label
 	// by default only return the user visible grids
 	std::map<std::string, std::string> getKnownGrids(bool favorites_only=FALSE);
 	
-	void getGridInfo(const std::string& grid, LLSD &grid_info);
+	// this was getGridInfo - renamed to avoid ambiguity with the OpenSim grid_info
+	void getGridData(const std::string& grid, LLSD &grid_info);
+	void getGridData(LLSD &grid_info) { getGridData(mGrid, grid_info); }
+	void setGridData(const LLSD &grid_info) { mGridList[mGrid]=grid_info; }
 	
 	// current grid management
 
@@ -94,25 +147,37 @@ public:
 	void setGridChoice(const std::string& grid);
 	
 	
-	std::string getGridLabel() { return mGridList[mGrid][GRID_LABEL_VALUE]; } 	
+	//get the grid label e.g. "Second Life"
+	std::string getGridLabel() { return mGridList[mGrid][GRID_LABEL_VALUE]; }
+	//get the grid nick e.g. "agni"
+	std::string getGridNick() { return mGridList[mGrid][GRID_NICK_VALUE]; }
+	std::string getCurrency();
+	//get the grid e.g. "util.agni.lindenlab.com"	
 	std::string getGrid() const { return mGrid; }
+	
 	void getLoginURIs(std::vector<std::string>& uris);
 	std::string getHelperURI();
 	std::string getLoginPage();
 	std::string getGridLoginID() { return mGridList[mGrid][GRID_ID_VALUE]; }	
 	std::string getLoginPage(const std::string& grid) { return mGridList[grid][GRID_LOGIN_PAGE_VALUE]; }
-	void        getLoginIdentifierTypes(LLSD& idTypes) { idTypes = mGridList[mGrid][GRID_LOGIN_IDENTIFIER_TYPES]; }
+	void getLoginIdentifierTypes(LLSD& idTypes) { idTypes = mGridList[mGrid][GRID_LOGIN_IDENTIFIER_TYPES]; }
+	
+	std::string trimHypergrid(const std::string& trim);
 	
 	// build a slurl for the given region within the selected grid
 	std::string getSLURLBase(const std::string& grid);
 	std::string getSLURLBase() { return getSLURLBase(mGrid); }
-	
+
 	std::string getAppSLURLBase(const std::string& grid);
 	std::string getAppSLURLBase() { return getAppSLURLBase(mGrid); }	
-	
-	void getGridInfo(LLSD &grid_info) { getGridInfo(mGrid, grid_info); }
-	
 	std::string getGridByLabel( const std::string &grid_label, bool case_sensitive = false);
+
+	bool isHyperGrid(const std::string& grid) { return mGridList[grid].has("HG"); }
+	
+	std::string getGridByProbing( const std::string &probe_for, bool case_sensitive = false);
+	std::string getGridByGridNick( const std::string &grid_nick, bool case_sensitive = false);
+	std::string getGridByHostName( const std::string &host_name, bool case_sensitive = false);
+	std::string getGridByAttribute(const std::string &attribute, const std::string &attribute_value, bool case_sensitive );
 	
 	bool isSystemGrid(const std::string& grid) 
 	{ 
@@ -123,10 +188,14 @@ public:
 	bool isSystemGrid() { return isSystemGrid(mGrid); }
 	// Mark this grid as a favorite that should be persisited on 'save'
 	// this is currently used to persist a grid after a successful login
-	void setFavorite() { mGridList[mGrid][GRID_IS_FAVORITE_VALUE] = TRUE; }
+	// Not used anymore, keeping commented as reminder for merge conflicts
+	//void setFavorite() { mGridList[mGrid][GRID_IS_FAVORITE_VALUE] = TRUE; }
 	
-	bool isInProductionGrid();
-	void saveFavorites();
+	bool isInSLMain();
+	bool isInSLBeta();
+	bool isInOpenSim();
+	void saveGridList();
+	int mGridEntries;
 	void clearFavorites();
 
 protected:
@@ -135,17 +204,24 @@ protected:
 
 	// helper function for adding the predefined grids
 	void addSystemGrid(const std::string& label, 
-					   const std::string& name, 
+					   const std::string& name,
+					   const std::string& nick,
 					   const std::string& login, 
 					   const std::string& helper,
-					   const std::string& login_page,
-					   const std::string& login_id = "");	
+					   const std::string& login_page);
 	
 	
 	std::string mGrid;
 	std::string mGridFile;
 	LLSD mGridList;
-	bool mIsInProductionGrid;
+// <AW opensim>
+	bool mIsInSLMain;
+	bool mIsInSLBeta;
+	bool mIsInOpenSim;
+	int mResponderCount;
+	bool mReadyToLogin;
+	bool mCommandLineDone;
+// </AW opensim>
 };
 
 const S32 MAC_ADDRESS_BYTES = 6;

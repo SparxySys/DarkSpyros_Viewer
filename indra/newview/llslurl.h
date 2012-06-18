@@ -35,6 +35,7 @@
 class LLSLURL
 {
 public:
+	static const char* HOP_SCHEME;
 	static const char* SLURL_HTTPS_SCHEME;
 	static const char* SLURL_HTTP_SCHEME;
 	static const char* SLURL_SL_SCHEME;
@@ -49,18 +50,18 @@ public:
 	static const char* SIM_LOCATION_HOME;
 	static const char* SIM_LOCATION_LAST;
 	static const char* SLURL_APP_PATH;
-	static const char* SLURL_REGION_PATH;	
-	
-	enum SLURL_TYPE { 
-		INVALID, 
+	static const char* SLURL_REGION_PATH; 
+ 
+	enum SLURL_TYPE
+	{
+		INVALID,
 		LOCATION,
 		HOME_LOCATION,
 		LAST_LOCATION,
 		APP,
-		HELP 
+		HELP
 	};
-		
-	
+
 	LLSLURL(): mType(INVALID)  { }
 	LLSLURL(const std::string& slurl);
 	LLSLURL(const std::string& grid, const std::string& region);
@@ -69,8 +70,12 @@ public:
 	LLSLURL(const std::string& grid, const std::string& region, const LLVector3d& global_position);
 	LLSLURL(const std::string& region, const LLVector3d& global_position);
 	LLSLURL(const std::string& command, const LLUUID&id, const std::string& verb);
+	LLSLURL(const LLSD& path_array, bool from_app);
 	
 	SLURL_TYPE getType() const { return mType; }
+	
+	std::string getTypeHumanReadable() { return getTypeHumanReadable(mType); }
+	static std::string getTypeHumanReadable(SLURL_TYPE type);
 	
 	std::string getSLURLString() const;
 	std::string getLoginString() const;
@@ -78,31 +83,33 @@ public:
 	std::string getGrid() const { return mGrid; }
 	std::string getRegion() const { return mRegion; }
 	LLVector3   getPosition() const { return mPosition; }
+	bool        getHypergrid() const { return mHypergrid; }
 	std::string getAppCmd() const { return mAppCmd; }
 	std::string getAppQuery() const { return mAppQuery; }
 	LLSD        getAppQueryMap() const { return mAppQueryMap; }
 	LLSD        getAppPath() const { return mAppPath; }
-	
+
 	bool        isValid() const { return mType != INVALID; }
 	bool        isSpatial() const { return (mType == LAST_LOCATION) || (mType == HOME_LOCATION) || (mType == LOCATION); }
-	
+
 	bool operator==(const LLSLURL& rhs);
 	bool operator!=(const LLSLURL&rhs);
 
-    std::string asString() const ;
+	std::string asString() const ;
 
 protected:
 	SLURL_TYPE mType;
-	
+
 	// used for Apps and Help
 	std::string mAppCmd;
 	LLSD        mAppPath;
 	LLSD        mAppQueryMap;
 	std::string mAppQuery;
-	
+
 	std::string mGrid;  // reference to grid manager grid
 	std::string mRegion;
 	LLVector3  mPosition;
+	bool mHypergrid;
 };
 
 #endif // LLSLURL_H

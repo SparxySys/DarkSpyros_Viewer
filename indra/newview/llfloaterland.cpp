@@ -75,6 +75,7 @@
 #include "llviewercontrol.h"
 #include "roles_constants.h"
 #include "lltrans.h"
+#include "llviewernetwork.h"
 
 #include "llgroupactions.h"
 
@@ -647,9 +648,17 @@ void LLPanelLandGeneral::refresh()
 			mTextClaimDate->setText(claim_date_str);
 			mTextClaimDate->setEnabled(is_leased);
 
-			BOOL enable_auction = (gAgent.getGodLevel() >= GOD_LIAISON)
+			BOOL enable_auction;
+			if(LLGridManager::getInstance()->isInSLMain() || LLGridManager::getInstance()->isInSLBeta()) {
+				enable_auction = (gAgent.getGodLevel() >= GOD_LIAISON)
 								  && (owner_id == GOVERNOR_LINDEN_ID)
 								  && (parcel->getAuctionID() == 0);
+			}
+			else 
+			{
+				enable_auction = (gAgent.getGodLevel() >= GOD_LIAISON)
+								  && (parcel->getAuctionID() == 0);
+			}
 			mBtnStartAuction->setEnabled(enable_auction);
 		}
 
@@ -739,6 +748,8 @@ void LLPanelLandGeneral::refresh()
 			}
 
 			S32 price = parcel->getSalePrice();
+			std::string type_currency = LLGridManager::getInstance()->getCurrency();
+			mSaleInfoForSale1->setTextArg("[CUR]", type_currency);
 			mSaleInfoForSale1->setTextArg("[PRICE]", LLResMgr::getInstance()->getMonetaryString(price));
 			mSaleInfoForSale1->setTextArg("[PRICE_PER_SQM]", llformat("%.1f", cost_per_sqm));
 			if (can_be_sold)
@@ -963,11 +974,12 @@ void LLPanelLandGeneral::onClickBuyPass(void* data)
 	std::string cost, time;
 	cost = llformat("%d", pass_price);
 	time = llformat("%.2f", pass_hours);
-
+	std::string type_currency = LLGridManager::getInstance()->getCurrency();
 	LLSD args;
 	args["COST"] = cost;
 	args["PARCEL_NAME"] = parcel_name;
 	args["TIME"] = time;
+	args["CUR"] = type_currency;
 	
 	// creating pointer on selection to avoid deselection of parcel until we are done with buying pass (EXT-6464)
 	sSelectionForBuyPass = LLViewerParcelMgr::getInstance()->getParcelSelection();
@@ -1863,6 +1875,9 @@ BOOL LLPanelLandOptions::postBuild()
 
 	mCheckShowDirectory = getChild<LLCheckBoxCtrl>( "ShowDirectoryCheck");
 	childSetCommitCallback("ShowDirectoryCheck", onCommitAny, this);
+	
+	std::string type_currency = LLGridManager::getInstance()->getCurrency();
+	mCheckShowDirectory->setLabelArg(std::string("[CUR]"), type_currency);
 
 	
 	if (gAgent.getAgentAccess().isInTransition())
@@ -2360,6 +2375,9 @@ BOOL LLPanelLandAccess::postBuild()
 		mListBanned->setContextMenu(LLScrollListCtrl::MENU_AVATAR);
 	}
 
+	std::string type_currency = LLGridManager::getInstance()->getCurrency();
+	getChild<LLSpinCtrl>("PriceSpin")->setLabelArg(std::string("[CUR]"), type_currency);
+	
 	return TRUE;
 }
 

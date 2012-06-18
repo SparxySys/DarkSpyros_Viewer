@@ -1404,7 +1404,7 @@ void LLVOAvatar::getSpatialExtents(LLVector4a& newMin, LLVector4a& newMax)
 	newMin.setSub(pos, buffer);
 	newMax.setAdd(pos, buffer);
 
-	float max_attachment_span = get_default_max_prim_scale() * 5.0f;
+		float max_attachment_span = LLWorld::getInstance()->getRegionMaxPrimScale() +40.0f;
 	
 	//stretch bounding box by joint positions
 	for (polymesh_map_t::iterator i = mMeshes.begin(); i != mMeshes.end(); ++i)

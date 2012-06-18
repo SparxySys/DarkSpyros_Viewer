@@ -32,7 +32,7 @@
 
 // Enabled this definition to compile a 'hacked' viewer that
 // allows a hacked godmode to be toggled on and off.
-#define TOGGLE_HACKED_GODLIKE_VIEWER 
+//#define TOGGLE_HACKED_GODLIKE_VIEWER 
 #ifdef TOGGLE_HACKED_GODLIKE_VIEWER
 extern BOOL gHackGodmode;
 #endif

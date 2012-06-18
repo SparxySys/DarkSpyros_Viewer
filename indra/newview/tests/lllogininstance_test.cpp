@@ -114,12 +114,20 @@ LLGridManager::~LLGridManager()
 {
 }
 
-void LLGridManager::addGrid(LLSD& grid_data)
+void LLGridManager::gridInfoResponderCB(GridEntry* grid_entry, LLXMLNodePtr& root)
 {
 }
+
+void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
+{
+}
+
 LLGridManager::LLGridManager()
 :
-	mIsInProductionGrid(false)
+	mIsInSLMain(false),
+	mIsInSLBeta(false),
+	mIsInOpenSim(false),
+	mGridEntries(0)
 {	
 }
 
@@ -146,13 +154,25 @@ void LLGridManager::setGridChoice(const std::string& grid_name)
 {
 }
 
-bool LLGridManager::isInProductionGrid()
+bool LLGridManager::isInSLMain()
 {
 	return false;
 }
 
-void LLGridManager::saveFavorites()
-{}
+bool LLGridManager::isInSLBeta()
+{
+	return false;
+}
+
+bool LLGridManager::isInOpenSim()
+{
+	return false;
+}
+
+void LLGridManager::saveGridList()
+{
+}
+
 std::string LLGridManager::getSLURLBase(const std::string& grid_name)
 {
 	return "myslurl";

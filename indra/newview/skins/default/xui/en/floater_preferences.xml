@@ -127,6 +127,13 @@
          layout="topleft"
          help_topic="preferences_advanced1_tab"
          name="advanced1" />
+		<panel
+         class="panel_preference_grids"
+         filename="panel_preferences_grids.xml"
+         label="Grid Manager"
+         layout="topleft"
+         help_topic="preferences_grids_tab"
+         name="grids" />
     </tab_container>
 
 </floater>

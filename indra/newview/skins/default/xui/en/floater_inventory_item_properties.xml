@@ -339,7 +339,7 @@
         name="CurrencySymbol"
         top_delta="1"
         width="18">
-      L$
+      [CUR]
     </text>
 
     <!--line_editor

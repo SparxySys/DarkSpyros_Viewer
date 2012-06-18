@@ -72,6 +72,7 @@ set(cmake_SOURCE_FILES
     PNG.cmake
     Python.cmake
     Prebuilt.cmake
+	Teapot.cmake
     TemplateCheck.cmake
     Tut.cmake
     UI.cmake

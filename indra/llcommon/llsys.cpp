@@ -1276,7 +1276,7 @@ public:
         }
         // Congratulations, we've hit a new low.  :-P
 
-        LL_INFOS("FrameWatcher") << ' ';
+        LL_DEBUGS("FrameWatcher") << ' ';
         if (! prevSize)
         {
             LL_CONT << "initial framerate ";

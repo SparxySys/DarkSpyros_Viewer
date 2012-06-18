@@ -48,13 +48,14 @@ name="login"
 layout="topleft"
 width="705"
 min_width="705"
+user_resize="false"
 height="80">
 <text
 follows="left|bottom"
 font="SansSerifSmall"
 height="16"
 name="username_text"
-top="20"
+top="10"
 left="20"
 width="150">
 Username:
@@ -71,17 +72,29 @@ top_pad="0"
 name="username_combo"
 width="178">
   <combo_box.combo_button
-   visible ="false"/>
+   visible ="true"/>
   <combo_box.drop_down_button
-   visible ="false"/>
+   visible ="true"/>
 </combo_box>
+<button
+follows="left|bottom"
+height="16"
+image_selected="PushButton_On_Selected"
+label="Delete this entry"
+label_color="White"
+layout="topleft"
+top_pad="0"
+left="18"
+name="delete_saved_login_btn"
+width="150"
+tab_stop="false" />
 <text
 follows="left|bottom"
 font="SansSerifSmall"
 height="15"
-left_pad="-19"
+left_pad="35"
 name="password_text"
-top="20"
+top="10"
     width="150">
        Password:
 </text>
@@ -100,9 +113,9 @@ follows="left|bottom"
 font="SansSerifSmall"
 height="16"
 label="Remember password"
-  top_pad="3"
-  name="remember_check"
- width="135" />
+top_pad="3"
+name="remember_check"
+width="135" />
 <button
   follows="left|bottom"
   height="23"
@@ -113,7 +126,7 @@ label="Remember password"
   layout="topleft"
   left_pad="10"
   name="connect_btn"
-  top="35"
+  top="25"
   width="90" />
   <text
   follows="left|bottom"
@@ -121,7 +134,7 @@ label="Remember password"
   height="15"
   left_pad="8"
   name="start_location_text"
-  top="20"
+  top="10"
   width="130">
        Start at:
  </text>
@@ -146,17 +159,31 @@ name="MyHome"
 label="&lt;Type region name&gt;"
 name="Typeregionname"   value="" />
 </combo_box>
-<combo_box
-allow_text_entry="true"
-font="SansSerifSmall"
-   follows="left|right|bottom"
-   height="23"
-   max_chars="256"
+	<combo_box
+	  allow_text_entry="true"
+	  font="SansSerifSmall"
+	  follows="left|right|bottom"
+	  height="22"
+	  max_chars="256"
+      layout="topleft"
+      top_pad="0"
+      name="server_combo"
+      width="135"
+      visible="true">
+    </combo_box>
+<button
+follows="left|bottom"
+height="20"
+is_toggle="true"
+image_unselected="PushButton_Off"
+image_selected="PushButton_On_Selected"
+label="Grid Manager"
+label_color="White"
 layout="topleft"
-top_pad="2"
-name="server_combo"
-width="135"
-  visible="false" />
+top_pad="0"
+name="grids_btn"
+width="110"
+tab_stop="false" />
 </layout_panel>
 <layout_panel
 tab_stop="false"
@@ -164,6 +191,7 @@ follows="right|bottom"
 name="links"
 width="205"
 min_width="205"
+user_resize="false"
 height="80">
    <text
 follows="right|bottom"
@@ -199,7 +227,9 @@ name="login_help"
 top_pad="2"
 right="-10"
     width="200">
-       Need help logging in?   </text>
+       Need help logging in?
+</text>
+
 <!--  <text
     follows="right|bottom"
     font="SansSerifSmall"

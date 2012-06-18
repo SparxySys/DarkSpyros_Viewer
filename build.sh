@@ -62,6 +62,7 @@ pre_build()
     "$AUTOBUILD" configure -c $variant -- \
      -DPACKAGE:BOOL=ON \
      -DRELEASE_CRASH_REPORTING:BOOL=ON \
+	 -DGRID:STRING="$viewer_grid"\
      -DVIEWER_CHANNEL:STRING="\"$viewer_channel\"" \
      -DVIEWER_LOGIN_CHANNEL:STRING="\"$viewer_login_channel\"" \
      -DGRID:STRING="\"$viewer_grid\"" \

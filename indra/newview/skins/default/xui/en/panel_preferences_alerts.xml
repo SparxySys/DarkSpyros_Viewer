@@ -23,7 +23,7 @@
     <check_box
      control_name="NotifyMoneyChange"
      height="16"
-     label="When I spend or get L$"
+     label="When I spend or get [CUR]"
      layout="topleft"
      left_delta="50"
      name="notify_money_change_checkbox"

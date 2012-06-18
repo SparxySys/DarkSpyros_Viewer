@@ -116,6 +116,7 @@
 #include "lltoolgrab.h"
 #include "llwindow.h"
 #include "boost/unordered_map.hpp"
+#include "llviewernetwork.h"
 // [RLVa:KB] - Checked: 2011-05-22 (RLVa-1.3.1a)
 #include "rlvhandler.h"
 #include "rlvlocks.h"
@@ -445,7 +446,7 @@ void init_menus()
 	gPopupMenuView->setBackgroundColor( color );
 
 	// If we are not in production, use a different color to make it apparent.
-	if (LLGridManager::getInstance()->isInProductionGrid())
+	if (!LLGridManager::getInstance()->isInSLBeta())
 	{
 		color = LLUIColorTable::instance().getColor( "MenuBarBgColor" );
 	}
@@ -463,7 +464,7 @@ void init_menus()
 	menu_bar_holder->addChild(gMenuBarView);
   
     gViewerWindow->setMenuBackgroundColor(false, 
-        LLGridManager::getInstance()->isInProductionGrid());
+       !LLGridManager::getInstance()->isInSLBeta());
 
 	// Assume L$10 for now, the server will tell us the real cost at login
 	// *TODO:Also fix cost in llfolderview.cpp for Inventory menus
@@ -472,6 +473,15 @@ void init_menus()
 	gMenuHolder->childSetLabelArg("Upload Sound", "[COST]", upload_cost);
 	gMenuHolder->childSetLabelArg("Upload Animation", "[COST]", upload_cost);
 	gMenuHolder->childSetLabelArg("Bulk Upload", "[COST]", upload_cost);
+	
+	std::string type_currency = LLGridManager::getInstance()->getCurrency();
+	gMenuHolder->childSetLabelArg("Upload Image", "[CUR]", type_currency);
+	gMenuHolder->childSetLabelArg("Upload Sound", "[CUR]", type_currency);
+	gMenuHolder->childSetLabelArg("Upload Animation", "[CUR]", type_currency);
+	gMenuHolder->childSetLabelArg("Bulk Upload", "[CUR]", type_currency);
+
+	gMenuHolder->childSetLabelArg("Buy and Sell L$", "[CUR]", type_currency);
+	gMenuHolder->childSetLabelArg("LindenXchange", "[CUR]", type_currency);
 	
 	gAFKMenu = gMenuBarView->getChild<LLMenuItemCallGL>("Set Away", TRUE);
 	gBusyMenu = gMenuBarView->getChild<LLMenuItemCallGL>("Set Busy", TRUE);
@@ -2588,6 +2598,39 @@ bool enable_object_open()
 	return root->allowOpen();
 }
 
+bool enable_object_export()
+{
+	LLViewerObject* object = LLSelectMgr::getInstance()->getSelection()->getPrimaryObject();
+	bool new_value = (object != NULL);
+	if (new_value)
+	{
+		/*
+		struct ff : public LLSelectedNodeFunctor
+		{
+			ff(const LLSD& data) : LLSelectedNodeFunctor(), userdata(data)
+			{
+			}
+			const LLSD& userdata;
+			virtual bool apply(LLSelectNode* node)
+			{
+					// Note: the actual permission checking algorithm depends on the grid TOS and must be
+					// performed for each prim and texture. This is done later in llviewerobjectbackup.cpp.
+					// This means that even if the item is enabled in the menu, the export may fail should
+					// the permissions not be met for each exported asset. The permissions check below
+					// therefore only corresponds to the minimal permissions requirement common to all grids.
+					LLPermissions *item_permissions = node->mPermissions;
+					return (gAgent.getID() == item_permissions->getOwner() &&
+							(gAgent.getID() == item_permissions->getCreator() ||
+							 (item_permissions->getMaskOwner() & PERM_ITEM_UNRESTRICTED) == PERM_ITEM_UNRESTRICTED));
+			}
+		};
+		ff * the_ff = new ff(userdata);
+		new_value = LLSelectMgr::getInstance()->getSelection()->applyToNodes(the_ff, false);
+		*/
+	}
+	return new_value;
+}
+
 
 class LLViewJoystickFlycam : public view_listener_t
 {
@@ -3623,7 +3666,7 @@ void set_god_level(U8 god_level)
         if(gViewerWindow)
         {
             gViewerWindow->setMenuBackgroundColor(god_level > GOD_NOT,
-            LLGridManager::getInstance()->isInProductionGrid());
+            !LLGridManager::getInstance()->isInSLBeta());
         }
     
         LLSD args;
@@ -3663,7 +3706,7 @@ BOOL check_toggle_hacked_godmode(void*)
 
 bool enable_toggle_hacked_godmode(void*)
 {
-  return !LLGridManager::getInstance()->isInProductionGrid();
+  return LLGridManager::getInstance()->isInSLBeta();
 }
 #endif
 
@@ -4709,7 +4752,7 @@ BOOL enable_take()
 		return TRUE;
 #else
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-		if (!LLGridManager::getInstance()->isInProductionGrid() 
+		if (LLGridManager::getInstance()->isInSLBeta() 
             && gAgent.isGodlike())
 		{
 			return TRUE;
@@ -4744,8 +4787,10 @@ void handle_buy_or_take()
 		}
 		else
 		{
+			std::string type_currency = LLGridManager::getInstance()->getCurrency();
 			LLStringUtil::format_map_t args;
 			args["AMOUNT"] = llformat("%d", total_price);
+			args["CUR"] = type_currency;
 			LLBuyCurrencyHTML::openCurrencyFloater( LLTrans::getString( "BuyingCosts", args ), total_price );
 		}
 	}
@@ -4867,11 +4912,13 @@ void show_buy_currency(const char* extra)
 	}
 	mesg << "Go to " << LLNotifications::instance().getGlobalString("BUY_CURRENCY_URL")<< "\nfor information on purchasing currency?";
 */
+	std::string type_currency = LLGridManager::getInstance()->getCurrency();
 	LLSD args;
 	if (extra != NULL)
 	{
 		args["EXTRA"] = extra;
 	}
+	args["CUR"] = type_currency;
 	LLNotificationsUtil::add("PromptGoToCurrencyPage", args);//, LLSD(), callback_show_buy_currency);
 }
 
@@ -4887,8 +4934,10 @@ void handle_buy()
 	
 	if (price > 0 && price > gStatusBar->getBalance())
 	{
+		std::string type_currency = LLGridManager::getInstance()->getCurrency();
 		LLStringUtil::format_map_t args;
 		args["AMOUNT"] = llformat("%d", price);
+		args["CUR"] = type_currency;
 		LLBuyCurrencyHTML::openCurrencyFloater( LLTrans::getString("this_object_costs", args), price );
 		return;
 	}
@@ -5242,7 +5291,7 @@ bool enable_object_delete()
 	TRUE;
 #else
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-	(!LLGridManager::getInstance()->isInProductionGrid()
+	(LLGridManager::getInstance()->isInSLBeta()
      && gAgent.isGodlike()) ||
 # endif
 	LLSelectMgr::getInstance()->canDoDelete();
@@ -5955,6 +6004,49 @@ class LLShowHelp : public view_listener_t
 		return true;
 	}
 };
+
+bool update_grid_help()
+{
+	LLSD grid_info;
+	LLGridManager::getInstance()->getGridData(grid_info);
+	std::string grid_label = LLGridManager::getInstance()->getGridLabel();
+	bool needs_seperator = false;
+
+	if (LLGridManager::getInstance()->isInOpenSim() && grid_info.has("help"))
+	{
+		needs_seperator = true;
+		gMenuHolder->childSetVisible("current_grid_help",true);
+		gMenuHolder->childSetLabelArg("current_grid_help", "[CURRENT_GRID]", grid_label);
+		gMenuHolder->childSetVisible("current_grid_help_login",true);
+		gMenuHolder->childSetLabelArg("current_grid_help_login", "[CURRENT_GRID]", grid_label);
+	}
+	else
+	{
+		gMenuHolder->childSetVisible("current_grid_help",false);
+		gMenuHolder->childSetVisible("current_grid_help_login",false);
+	}
+
+	if (LLGridManager::getInstance()->isInOpenSim() && grid_info.has("about"))
+	{
+		needs_seperator = true;
+		gMenuHolder->childSetVisible("current_grid_about",true);
+		gMenuHolder->childSetLabelArg("current_grid_about", "[CURRENT_GRID]", grid_label);
+		gMenuHolder->childSetVisible("current_grid_about_login",true);
+		gMenuHolder->childSetLabelArg("current_grid_about_login", "[CURRENT_GRID]", grid_label);
+	}
+	else
+	{
+		gMenuHolder->childSetVisible("current_grid_about",false);
+		gMenuHolder->childSetVisible("current_grid_about_login",false);
+	}
+
+	//FIXME: this does nothing
+
+	gMenuHolder->childSetVisible("grid_help_seperator",needs_seperator);
+	gMenuHolder->childSetVisible("grid_help_seperator_login",needs_seperator);
+
+	return true;
+}
 
 class LLToggleHelp : public view_listener_t
 {
@@ -7262,7 +7354,7 @@ bool enable_object_take_copy()
 		all_valid = true;
 #ifndef HACKED_GODLIKE_VIEWER
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-		if (LLGridManager::getInstance()->isInProductionGrid()
+		if (!LLGridManager::getInstance()->isInSLBeta()
             || !gAgent.isGodlike())
 # endif
 		{
@@ -7328,7 +7420,7 @@ BOOL enable_save_into_inventory(void*)
 	return TRUE;
 #else
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-	if (!LLGridManager::getInstance()->isInProductionGrid()
+	if (!LLGridManager::getInstance()->isInSLBeta()
         && gAgent.isGodlike())
 	{
 		return TRUE;
@@ -7388,7 +7480,9 @@ class LLToggleHowTo : public view_listener_t
 	{
 		LLFloaterWebContent::Params p;
 		std::string url = gSavedSettings.getString("HowToHelpURL");
-		p.url = LLWeb::expandURLSubstitutions(url, LLSD());
+		std::string url_expanded = LLWeb::expandURLSubstitutions(url, LLSD());
+		LL_DEBUGS("WebApi") << "HowToHelpURL \"" << url_expanded << "\"" << LL_ENDL;
+		p.url = url_expanded;
 		p.show_chrome = false;
 		p.target = "__help_how_to";
 		p.show_page_title = false;
@@ -8356,8 +8450,11 @@ class LLUploadCostCalculator : public view_listener_t
 
 	bool handleEvent(const LLSD& userdata)
 	{
+		calculateCost();
 		std::string menu_name = userdata.asString();
 		gMenuHolder->childSetLabelArg(menu_name, "[COST]", mCostStr);
+		std::string type_currency = LLGridManager::getInstance()->getCurrency();
+		gMenuHolder->childSetLabelArg(menu_name, "[CUR]", type_currency);
 
 		return true;
 	}
@@ -8369,6 +8466,21 @@ public:
 	{
 		calculateCost();
 	}
+};
+
+class LLCurrencyTypeCheck : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		std::string menu_name = userdata.asString();
+		std::string type_currency = LLGridManager::getInstance()->getCurrency();
+		gMenuHolder->childSetLabelArg(menu_name, "[CUR]", type_currency);
+
+		return true;
+	}
+
+public:
+	LLCurrencyTypeCheck() {}
 };
 
 class LLToggleUIHints : public view_listener_t
@@ -8491,7 +8603,7 @@ void initialize_menus()
 	enable.add("IsGodCustomerService", boost::bind(&is_god_customer_service));
 
 	view_listener_t::addEnable(new LLUploadCostCalculator(), "Upload.CalculateCosts");
-
+	view_listener_t::addEnable(new LLCurrencyTypeCheck(), "Currency.TypeCheck");
 
 	commit.add("Inventory.NewWindow", boost::bind(&LLFloaterInventory::showAgentInventory));
 
