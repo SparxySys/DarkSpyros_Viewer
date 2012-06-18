@@ -82,6 +82,7 @@ set(viewer_SOURCE_FILES
     ao.cpp
 	aoengine.cpp
 	aoset.cpp
+	fsareasearch.cpp
 	groupchatlistener.cpp
     llaccountingcostmanager.cpp
     llagent.cpp
@@ -651,6 +652,7 @@ set(viewer_HEADER_FILES
     ao.h
 	aoengine.h
 	aoset.h
+	fsareasearch.h
 	groupchatlistener.h
     llaccountingcostmanager.h
     llagent.h

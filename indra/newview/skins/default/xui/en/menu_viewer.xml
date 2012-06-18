@@ -375,6 +375,14 @@
                  function="World.EnableSetHomeLocation" />
             </menu_item_call>
         <menu_item_separator/>
+		<menu_item_call
+		 label="Area Search"
+		 shortcut="alt|shift|A"
+		 name="area_search">
+		    <menu_item_call.on_click
+			 function="Floater.Toggle"
+			 parameter="area_search" />
+		</menu_item_call>
         <menu_item_call
          label="Snapshot"
          name="Take Snapshot"

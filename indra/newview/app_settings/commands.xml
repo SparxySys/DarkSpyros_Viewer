@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <commands>
+  <command name="areasearch"
+		   available_in_toybox="true"
+		   icon="Command_AreaSearch_Icon"
+		   label_ref="Command_AreaSearch_Label"
+		   tooltip_ref="Command_AreaSearch_Tooltip"
+		   execute_function="Floater.ToggleOrBringToFront"
+		   execute_parameters="area_search"
+		   is_running_function="Floater.IsOpen"
+		   is_running_parameters="area_search"
+		   />
   <command name="aoswitch"
 			available_in_toybox="true"
 			icon="Command_AOSwitch_Icon"
